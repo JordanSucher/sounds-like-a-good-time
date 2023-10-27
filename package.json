@@ -1,0 +1,15 @@
+{
+  "name": "videos-from-strava",
+  "version": "1.0.0",
+  "description": "General Plan",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "strava-v3": "^2.2.0"
+  }
+}
