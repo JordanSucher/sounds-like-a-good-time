@@ -1,12 +1,9 @@
-require('dotenv').config()
+import App from './App.js'
+import React from 'react';
+import { createRoot } from "react-dom/client";
+const root = createRoot(document.getElementById("app"));
 
-
-
-var strava = require('strava-v3')
-strava.config({
-  "access_token"  : process.env.ACCESS_TOKEN,
-  "client_id"     : process.env.CLIENT_ID,
-  "client_secret" : process.env.CLIENT_SECRET,
-  "redirect_uri"  : process.env.REDIRECT_URI,
-});
+root.render (
+    <App />
+)
 
