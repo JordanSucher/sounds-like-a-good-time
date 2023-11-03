@@ -1,5 +1,14 @@
+/* @font-face {
+    font-family: 'Eighties';
+    src: local('EightiesComeback'), url(../fonts/EightiesComeback_VAR-VF.ttf) format('truetype');
+  }
+   */
 
-body, .App{
+p, ul, li{
+    font-family: "Eighties", monospace;
+}
+
+body, .RideViewer{
     position: relative;
 }
 
@@ -8,15 +17,37 @@ body{
     height: 100vh;
 }
 
+.navbar {
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar p{
+    margin-left: 20px;
+}
+
 .draggable-circle {
     position: absolute !important;
     background-color: red;
-    border: 3px solid orange;
+    border: 20px solid black;
     z-index: 0;
     border-radius: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50px;
-    height: 50px;
+    width: 90px;
+    height: 90px;
+}
+
+img {  
+    pointer-events: none;
+ }
+
+.RideViewer ::selection {
+    background: transparent;
+}
+
+.RideViewer ::-moz-selection {
+    background: transparent;
 }
