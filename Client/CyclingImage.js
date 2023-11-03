@@ -31,11 +31,11 @@ const CyclingImage = ({ images, startDelay }) => {
         {
         initialTimeoutDone &&
         <img 
-            // src={images[currentImageIndex]} 
+            src={images[currentImageIndex]} 
             // src={`https://ridevisualizer.s3.us-east-2.amazonaws.com/accident-ride-frames-lofi-compressed/` + images[currentImageIndex]} 
 
             
-            src={`http://d315wm83g1nlu7.cloudfront.net/accident-ride-frames-lofi-compressed/` + images[currentImageIndex]} 
+            // src={`http://d315wm83g1nlu7.cloudfront.net/accident-ride-frames-lofi-compressed/` + images[currentImageIndex]} 
             alt={`frame-${currentImageIndex}`}
             // crossOrigin='anonymous'
         />
