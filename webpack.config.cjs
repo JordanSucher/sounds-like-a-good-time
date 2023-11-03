@@ -1,10 +1,13 @@
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
+
 
 module.exports = {
-  entry: './index.js', // This path might differ based on your project structure
+  entry: './Client/index.js', // This path might differ based on your project structure
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
+    publicPath: '/'
   },
   module: {
     rules: [
@@ -44,8 +47,12 @@ module.exports = {
       "fs": require.resolve("browserify-fs"),
       "os": require.resolve("os-browserify/browser"),
       "stream": require.resolve("stream-browserify"),
-      "util": require.resolve("util/")
+      "util": require.resolve("util/"),
+      "crypto": false 
      }
   },
+  plugins: [
+    new Dotenv()
+  ]
   
 };
