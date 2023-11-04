@@ -21,6 +21,7 @@ body{
     height: 50px;
     display: flex;
     align-items: center;
+    border-bottom: 0.5px solid black
 }
 
 .navbar p{
@@ -40,6 +41,10 @@ body{
     height: 90px;
 }
 
+.draggable-circle:hover {
+    cursor: pointer;
+}
+
 img {  
     pointer-events: none;
  }
@@ -50,4 +55,11 @@ img {
 
 .RideViewer ::-moz-selection {
     background: transparent;
+}
+
+
+.Loading {
+    font-family: monospace, sans-serif;
+    margin-left: 90px;
+    margin-top: 90px;
 }
