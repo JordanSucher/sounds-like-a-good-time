@@ -14,29 +14,42 @@ function RideViewer() {
 
     // get image paths
     useEffect(() => {
-        const getImages = async () => {
-            try {
-                let response = await fetch ('/api/images')
-                let data = await response.json()
-                setImages(data)
-                return data
-                // console.log(data)
-            }
-            catch (error) {
-                console.log(error)
-            }
-        }
-
-        getImages().then((images) => {
-            preloadImages(images, () => {
-                setImagesLoaded(true)
-            })
-        })
-        
-    }, [])
+      const chunkSize = 150; // Define the size of each chunk
+      let currentChunkStart = 0;
+  
+      const fetchAndLoadImages = async (start) => {
+          try {
+              // Modify the API call to support fetching a specific chunk
+              console.log("trying to get images");
+              let response = await fetch(`/api/images?start=${start}&end=${start + chunkSize}`);
+              let data = await response.json();
+              console.log("response: ", data);
+  
+              // Set images for the current chunk only
+              setImages(prevImages => [...prevImages, ...data]);
+  
+              // Preload the current chunk and then load the next chunk
+              preloadImages(data, () => {
+                  // Check if there are more images to load
+                  if (data.length === chunkSize) {
+                      fetchAndLoadImages(start + chunkSize);
+                  } else {
+                      // All images are loaded
+                      setImagesLoaded(true);
+                  }
+              });
+          } catch (error) {
+              console.log(error);
+          }
+      };
+  
+      // Start the initial fetch with the first chunk
+      fetchAndLoadImages(currentChunkStart);
+  
+  }, []);
 
   if (!imagesLoaded) {
-      return <div className='Loading'>Loading images. This will take a minute...</div>
+      return <div className='Loading'>Loading images: {images.length} of ~22,000. This will take a minute...</div>
   } else {
     return (
       <div className="RideViewer">

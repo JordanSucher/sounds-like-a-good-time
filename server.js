@@ -44,23 +44,27 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/images', (req, res) => {
+    const start = parseInt(req.query.start, 10) || 0;
+    const end = parseInt(req.query.end, 10) || 150; // default chunk size
     const directoryPath = path.join(__dirname, 'accident-ride-frames-lofi-compressed');
+    
     fs.readdir(directoryPath, (err, files) => {
         if (err) {
             console.error('Error reading directory:', err);
-            return;
+            return res.status(500).send('Server error');
         }
 
-        // Sort the files based on the frame number
-        files.sort((a, b) => {
-            // Extract frame numbers from the filenames
-            const numA = parseInt(a.replace('frame', '').replace('.png', ''), 10);
-            const numB = parseInt(b.replace('frame', '').replace('.png', ''), 10);
-            return numA - numB;  // sort in ascending order
-        });
+        // Sort and filter the files based on the frame number
+        const sortedFilteredFiles = files
+            .sort((a, b) => {
+                const numA = parseInt(a.replace('frame', '').replace('.png', ''), 10);
+                const numB = parseInt(b.replace('frame', '').replace('.png', ''), 10);
+                return numA - numB; // sort in ascending order
+            })
+            .slice(start, end);
 
-        res.json(files);
-    })
+        res.json(sortedFilteredFiles);
+    });
 });
 
 // app.get('/api/activities', async (req, res) => {
