@@ -9,7 +9,7 @@ body, html{
 
 .image-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Adjust 100px to your desired image width */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust 100px to your desired image width */
     grid-gap: 0;
 }
 

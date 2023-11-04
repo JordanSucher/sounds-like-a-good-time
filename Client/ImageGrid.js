@@ -4,7 +4,7 @@ import './ImageGrid.css';
 import CyclingImage from './CyclingImage.js';
 
 const ImageGrid = ({ images }) => {
-    const totalComponents = 120;
+    const totalComponents = 28;
 
     return (
         <div className="image-grid">
