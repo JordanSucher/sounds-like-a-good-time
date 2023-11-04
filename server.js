@@ -57,8 +57,8 @@ app.get('/api/images', (req, res) => {
         // Sort and filter the files based on the frame number
         const sortedFilteredFiles = files
             .sort((a, b) => {
-                const numA = parseInt(a.replace('frame', '').replace('.png', ''), 10);
-                const numB = parseInt(b.replace('frame', '').replace('.png', ''), 10);
+                const numA = parseInt(a.replace('frame', '').replace('-fs8.webp', ''), 10);
+                const numB = parseInt(b.replace('frame', '').replace('-fs8.webp', ''), 10);
                 return numA - numB; // sort in ascending order
             })
             .slice(start, end);
