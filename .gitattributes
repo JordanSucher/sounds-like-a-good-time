@@ -1,2 +1,4 @@
+dist/accidentRideLofiCompressed.mp4 filter=lfs diff=lfs merge=lfs -text
+dist/accidentRideLofiCompressed2.mp4 filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 *.json filter=lfs diff=lfs merge=lfs -text
