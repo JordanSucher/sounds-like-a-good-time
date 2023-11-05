@@ -14,7 +14,7 @@ const DraggableCircle = ({startPosition}) => {
         const circleBounds = circleElement.getBoundingClientRect();
         
         // Define a small bounding box around the circle.
-        const captureSize = 10;  // Change size as needed. This is a 10x10 box.
+        const captureSize = 2;  // Change size as needed. This is a 4x4 box.
         const x = circleBounds.left + window.scrollX - captureSize / 2;
         const y = circleBounds.top + window.scrollY - captureSize / 2;
 
@@ -27,13 +27,14 @@ const DraggableCircle = ({startPosition}) => {
                 logging: false, // Disable logging for performance.
                 windowWidth: document.documentElement.clientWidth,
                 windowHeight: document.documentElement.clientHeight,
-                useCORS: true,
-                allowTaint: true
+                // useCORS: false,
+                // allowTaint: false
             });
     
             const ctx = canvas.getContext("2d");
             const pixel = ctx.getImageData(captureSize / 2, captureSize / 2, 1, 1).data;
-            // reset the canvas
+            // destroy the canvas
+            
             canvas.width = 0;
             canvas.height = 0;
     
