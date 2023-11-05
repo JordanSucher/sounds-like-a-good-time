@@ -1,7 +1,7 @@
 // src/components/CyclingImage.js
 
 import React, { useState, useEffect, useRef } from 'react';
-import { getImageFromDB, getBlobFromDB } from '../preloadImages.js';
+// import { getImageFromDB, getBlobFromDB } from '../preloadImages.js';
 
 const CyclingImage = ({ images, startDelay }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);

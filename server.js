@@ -4,7 +4,7 @@ import axios from 'axios'
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url';
-import AWS from 'aws-sdk';
+// import AWS from 'aws-sdk';
 import fs from 'fs';
 
 const app = express()

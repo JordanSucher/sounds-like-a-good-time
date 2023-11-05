@@ -68,3 +68,38 @@ img {
     margin-left: 90px;
     margin-top: 90px;
 }
+
+
+/* src/components/ImageGrid.css */
+
+body, html{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust 100px to your desired image width */
+    grid-gap: 0;
+}
+
+.image-grid img, .image-grid canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This ensures the aspect ratio is maintained */
+}
+
+.image-vid video{
+    min-width: 100%;
+    width: auto;
+    min-height: 100%;
+    height: auto;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
