@@ -101,6 +101,11 @@ const DraggableCircle = ({startPosition}) => {
             isDragging = true;
 
             const circleBounds = document.querySelector('.draggable-circle').getBoundingClientRect();
+            
+            // Use `e.touches[0]` for touch events and `e` for mouse events
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
             const x2 = circleBounds.left + circleBounds.width / 2;
             const y2 = circleBounds.top + circleBounds.height / 2;
 
@@ -113,19 +118,27 @@ const DraggableCircle = ({startPosition}) => {
 
             // console.log("curr x and y ", circleBounds.left, circleBounds.top);
 
-
-            offsetX = e.clientX - circleBounds.left;
-            offsetY = e.clientY - circleBounds.top;
-
+            offsetX = clientX - circleBounds.left;
+            offsetY = clientY - circleBounds.top;
+        
+            // Add both mouse and touch event listeners for move and end actions
             document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('touchmove', onMouseMove);
             document.addEventListener('mouseup', onMouseUp);
+            document.addEventListener('touchend', onMouseUp);
+
         };
 
         const onMouseMove = (e) => {
             if(!isDragging) return;
+
+            // Use `e.touches[0]` for touch events and `e` for mouse events
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
         
-            const x = e.clientX - offsetX;
-            const y = e.clientY - offsetY - document.querySelector('.navbar').getBoundingClientRect().height;
+            const x = clientX - offsetX;
+            const y = clientY - offsetY - document.querySelector('.navbar').getBoundingClientRect().height;
 
             // console.log("new x and y", x, y);
 
@@ -150,14 +163,21 @@ const DraggableCircle = ({startPosition}) => {
 
         const onMouseUp = () => {
             isDragging = false;
+            // Remove both mouse and touch event listeners
             document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('touchmove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
+            document.removeEventListener('touchend', onMouseUp);
+
         };
 
-        circle.addEventListener('mousedown', onMouseDown);
+        // Add both mousedown and touchstart event listeners
+        circleRef.current.addEventListener('mousedown', onMouseDown);
+        circleRef.current.addEventListener('touchstart', onMouseDown);
 
         return () => {
             circle.removeEventListener('mousedown', onMouseDown);
+            circle.removeEventListener('touchstart', onMouseDown);
             stopMonitoring();
         };
 
