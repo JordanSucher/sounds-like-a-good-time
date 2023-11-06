@@ -123,9 +123,9 @@ const DraggableCircle = ({startPosition}) => {
         
             // Add both mouse and touch event listeners for move and end actions
             document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('touchmove', onMouseMove);
+            document.addEventListener('touchmove', onMouseMove, { passive: false });
             document.addEventListener('mouseup', onMouseUp);
-            document.addEventListener('touchend', onMouseUp);
+            document.addEventListener('touchend', onMouseUp, { passive: false });
 
         };
 
@@ -173,7 +173,7 @@ const DraggableCircle = ({startPosition}) => {
 
         // Add both mousedown and touchstart event listeners
         circleRef.current.addEventListener('mousedown', onMouseDown);
-        circleRef.current.addEventListener('touchstart', onMouseDown);
+        circleRef.current.addEventListener('touchstart', onMouseDown, { passive: false });
 
         return () => {
             circle.removeEventListener('mousedown', onMouseDown);
