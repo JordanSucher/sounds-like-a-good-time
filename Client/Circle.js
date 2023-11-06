@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
-
+import * as Tone from 'tone';
 import {move, triggerAttack, computeLuminance} from './synthHelper.js';
 
 const DraggableCircle = ({startPosition}) => {
@@ -9,6 +9,7 @@ const DraggableCircle = ({startPosition}) => {
     const currColorRef = useRef(currColor);
     let [currPosition, setCurrPosition] = useState({ x: startPosition.x, y: startPosition.y });
     const currPositionRef = useRef(currPosition);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const captureColorAtCirclePosition = async (circleElement) => {
         const circleBounds = circleElement.getBoundingClientRect();
@@ -100,6 +101,11 @@ const DraggableCircle = ({startPosition}) => {
         const onMouseDown = (e) => {
             e.preventDefault();
             isDragging = true;
+
+            if (!isPlaying) {
+                Tone.start();
+                setIsPlaying(true);
+            }
 
             const circleBounds = document.querySelector('.draggable-circle').getBoundingClientRect();
             
