@@ -168,9 +168,9 @@ const DraggableCircle = ({startPosition}) => {
             isDragging = false;
             // Remove both mouse and touch event listeners
             document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('touchmove', onMouseMove);
+            document.removeEventListener('touchmove', onMouseMove, { passive: false });
             document.removeEventListener('mouseup', onMouseUp);
-            document.removeEventListener('touchend', onMouseUp);
+            document.removeEventListener('touchend', onMouseUp, { passive: false });
 
         };
 
