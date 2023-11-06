@@ -45,6 +45,8 @@ body, .App{
     align-items: center;
     width: 90px;
     height: 90px;
+
+    box-shadow: 0px 0px 30px black;
 }
 
 .draggable-circle:hover {
