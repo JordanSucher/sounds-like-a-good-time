@@ -98,6 +98,7 @@ const DraggableCircle = ({startPosition}) => {
 
         
         const onMouseDown = (e) => {
+            e.preventDefault();
             isDragging = true;
 
             const circleBounds = document.querySelector('.draggable-circle').getBoundingClientRect();
@@ -130,6 +131,7 @@ const DraggableCircle = ({startPosition}) => {
         };
 
         const onMouseMove = (e) => {
+            e.preventDefault();
             if(!isDragging) return;
 
             // Use `e.touches[0]` for touch events and `e` for mouse events
@@ -162,6 +164,7 @@ const DraggableCircle = ({startPosition}) => {
         };
 
         const onMouseUp = () => {
+            e.preventDefault();
             isDragging = false;
             // Remove both mouse and touch event listeners
             document.removeEventListener('mousemove', onMouseMove);
