@@ -8,7 +8,7 @@ const ImageGrid = () => {
     return (
         <div className="image-vid">
             {videoSrc && (
-                <video autoPlay loop muted playsInline>
+                <video autoPlay loop muted playsInline >
                     <source src={videoSrc} type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
@@ -16,6 +16,8 @@ const ImageGrid = () => {
         </div>
     );
 }
+
+// onClick={(e)=> e.target.paused ? e.target.play() : e.target.pause()}
 
 
 export default ImageGrid;

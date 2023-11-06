@@ -15,8 +15,8 @@ const DraggableCircle = ({startPosition}) => {
         
         // Define a small bounding box around the circle.
         const captureSize = 2;  // Change size as needed. This is a 4x4 box.
-        const x = circleBounds.left + window.scrollX - captureSize / 2;
-        const y = circleBounds.top + window.scrollY - captureSize / 2;
+        const x = circleBounds.left - 1;
+        const y = circleBounds.top + 45;
 
         try {
             const canvas = await html2canvas(document.body, {

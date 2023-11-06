@@ -9,10 +9,15 @@ import { preloadImages } from '../preloadImages.js';
 
 function RideViewer() {
     return (
-      <div className="RideViewer">
-        <DraggableCircle startPosition={{ x: 100, y: 100 }}/>
-        <ImageGrid />
-      </div>
+      <>
+      <div className="mobile-warning" style={{display: "none"}}>
+        <p>sorry, site only works on wider screens.</p>
+        </div>
+        <div className="RideViewer">
+          <DraggableCircle startPosition={{ x: 100, y: 100 }}/>
+          <ImageGrid />
+        </div>
+      </>
     );
   }
 
