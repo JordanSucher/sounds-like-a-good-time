@@ -8,8 +8,8 @@ const ImageGrid = () => {
     return (
         <div className="image-vid">
             {videoSrc && (
-                <video autoPlay loop muted playsInline >
-                    <source src={videoSrc} type="video/mp4" />
+                <video autoPlay loop muted playsInline crossOrigin='anonymous'>
+                    <source src="https://ridevisualizer.s3.us-east-2.amazonaws.com/testOutput.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
             )}

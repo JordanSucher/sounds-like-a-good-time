@@ -20,20 +20,14 @@ const DraggableCircle = ({startPosition}) => {
         const y = circleBounds.top + 45;
 
         try {
-            const canvas = await html2canvas(document.body, {
-                x: x,
-                y: y,
-                width: captureSize,
-                height: captureSize,
-                logging: false, // Disable logging for performance.
-                windowWidth: document.documentElement.clientWidth,
-                windowHeight: document.documentElement.clientHeight,
-                // useCORS: false,
-                // allowTaint: false
-            });
-    
+            let vid = document.querySelector('video')
+            const canvas = document.createElement('canvas');
+            canvas.width = vid.videoWidth
+            canvas.height = vid.videoHeight
+
             const ctx = canvas.getContext("2d");
-            const pixel = ctx.getImageData(captureSize / 2, captureSize / 2, 1, 1).data;
+            ctx.drawImage(vid, 0, 0, vid.videoWidth, vid.videoHeight);
+            const pixel = ctx.getImageData(x, y, 1, 1).data;
             // destroy the canvas
             
             canvas.width = 0;
@@ -64,6 +58,7 @@ const DraggableCircle = ({startPosition}) => {
               
               captureColorAtCirclePosition(circle).then((color) => {
                   setCurrColor(color);
+                //   console.log("color: ", color);
                   let luminance = computeLuminance(color)
                   move({
                     l: luminance, 
@@ -71,6 +66,8 @@ const DraggableCircle = ({startPosition}) => {
                     x: x / document.querySelector('body').getBoundingClientRect().width
                 });
 
+              }).catch((error) => {
+                  console.log(error);
               });
       
           }, 500);  // Checks every 500ms

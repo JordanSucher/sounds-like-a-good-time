@@ -6,8 +6,12 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 // import AWS from 'aws-sdk';
 import fs from 'fs';
+import request from 'request';
+import cors from 'cors';
 
 const app = express()
+app.use(cors())
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -66,6 +70,7 @@ app.get('/api/images', (req, res) => {
         res.json(sortedFilteredFiles);
     });
 });
+
 
 // app.get('/api/activities', async (req, res) => {
 //     // connect to dynamoDB
