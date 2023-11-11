@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import html2canvas from 'html2canvas';
 import * as Tone from 'tone';
 import {move, triggerAttack, computeLuminance} from './synthHelper.js';
 
@@ -10,6 +9,7 @@ const DraggableCircle = ({startPosition}) => {
     let [currPosition, setCurrPosition] = useState({ x: startPosition.x, y: startPosition.y });
     const currPositionRef = useRef(currPosition);
     const [isPlaying, setIsPlaying] = useState(false);
+    const isDragging = useRef(false);
 
     const captureColorAtCirclePosition = async (circleElement) => {
         const circleBounds = circleElement.getBoundingClientRect();
@@ -17,7 +17,7 @@ const DraggableCircle = ({startPosition}) => {
         // Define a small bounding box around the circle.
         const captureSize = 2;  // Change size as needed. This is a 4x4 box.
         const x = circleBounds.left - 1;
-        const y = circleBounds.top + 45;
+        const y = circleBounds.top - 60;
 
         try {
             let vid = document.querySelector('video')
@@ -87,7 +87,7 @@ const DraggableCircle = ({startPosition}) => {
 
     useEffect(() => {
         const circle = circleRef.current;
-        let offsetX, offsetY, isDragging = false;
+        let offsetX, offsetY = false;
         let tempX, tempY;
 
         if (!isMonitoring) {
@@ -97,7 +97,7 @@ const DraggableCircle = ({startPosition}) => {
         
         const onMouseDown = (e) => {
             e.preventDefault();
-            isDragging = true;
+            isDragging.current = true;
 
             if (!isPlaying) {
                 Tone.start();
@@ -135,7 +135,9 @@ const DraggableCircle = ({startPosition}) => {
 
         const onMouseMove = (e) => {
             e.preventDefault();
-            if(!isDragging) return;
+            if(!isDragging.current) {
+                return;
+            }
 
             // Use `e.touches[0]` for touch events and `e` for mouse events
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -166,9 +168,9 @@ const DraggableCircle = ({startPosition}) => {
            
         };
 
-        const onMouseUp = () => {
+        const onMouseUp = (e) => {
             e.preventDefault();
-            isDragging = false;
+            isDragging.current = false;
             // Remove both mouse and touch event listeners
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('touchmove', onMouseMove, { passive: false });
@@ -190,7 +192,12 @@ const DraggableCircle = ({startPosition}) => {
 
     }, []);
 
-    return <div ref={circleRef} className="draggable-circle" style={{backgroundColor: `rgba(${currColor})`, color: currColor, left: currPosition.x+"px", top: currPosition.y+"px"}}>
+    return <div ref={circleRef} className="draggable-circle" style={{
+        backgroundColor: `rgba(${currColor})`, 
+        border: `20px solid black`,
+        color: currColor, 
+        left: currPosition.x+"px", 
+        top: currPosition.y+"px"}}>
     </div>;
 };
 
