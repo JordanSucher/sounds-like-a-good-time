@@ -25,6 +25,8 @@ body, .App{
     height: 100vh;
 }
 
+/* NAVBAR */
+
 .navbar {
     height: 50px;
     padding: 5px;
@@ -35,6 +37,8 @@ body, .App{
 
 .navbar p, .navbar a{
     margin-left: 20px;
+    color: black;
+    font-weight: 400;
 }
 
 .draggable-circle {
@@ -133,4 +137,10 @@ body, html{
         height: 50px;
         border-width: 10px;   
     }
+}
+
+/* Single Ride */
+
+.single-ride {
+    margin: 50px
 }

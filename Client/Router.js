@@ -1,7 +1,8 @@
 import React from "react";
 import RideViewer from './RideViewer.js';
 import LandingPage from './LandingPage.js';
-import Navbar from "./Navbar.js";
+import SingleRide from "./SingleRide.js";
+
 import {
     BrowserRouter as Router,
     Routes,
@@ -11,28 +12,16 @@ import {
 
 const RouteObj = () => {
     
-    if (process.env.NODE_ENV === 'development') {
         return (
             <Router>
                 <Routes>
                     <Route path="/" element={<LandingPage />} />
-                    <Route path="/ride" element={<RideViewer />} />
+                    <Route path="/ride/:id" element={<SingleRide />} />
+                    <Route path="/visualize/:id" element={<RideViewer />} />
+                    <Route path="/visualize" element={<RideViewer />} />
                 </Routes>
             </Router>
         )
-    }
-
-    else {
-        return (
-            <Router>
-                <Routes>
-                    <Route path="/" element={<RideViewer />} />
-                    <Route path="/landing" element={<LandingPage />} />
-                </Routes>
-            </Router>
-        )
-
-    }
 
 }
 

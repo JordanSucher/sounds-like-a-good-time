@@ -6,11 +6,15 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 // import AWS from 'aws-sdk';
 import fs from 'fs';
-import request from 'request';
 import cors from 'cors';
+import { checkIfInS3, saveLatLongsToS3 } from './Server/awsHelper.js'
+import { createFrames } from './Server/frameHelper.js'
+import { generateVidFromS3 } from './Server/videoHelper.js'
+
 
 const app = express()
 app.use(cors())
+app.use(express.json({ limit: '2mb' }))
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -71,52 +75,35 @@ app.get('/api/images', (req, res) => {
     });
 });
 
+app.get('/api/video', async (req, res) => {
+    let activityId = req.query.activityId;
+    let activityInS3 = await checkIfInS3(activityId)
+    let videoInS3 = await checkIfInS3(`${activityId}/video.mp4`)
 
-// app.get('/api/activities', async (req, res) => {
-//     // connect to dynamoDB
+    if (videoInS3) {
+        res.json({ status: 'videoInS3' })
+    } else if (activityInS3) {
+        res.json({ status: 'activityInS3' })
+    } else {
+        res.json({ status: 'notInS3' })
+    }
 
-//     var AWS = require('aws-sdk');
-//     AWS.config.update({
-//         region: 'us-east-2',
-//         credentials: new AWS.SharedIniFileCredentials({ profile: 'default' }),
+})
 
-//     })
+app.post('/api/video', async (req, res) => {
+    let activityId = req.body.activityId;
+    let latlongs = req.body.latlongs;
+    res.send("Ok, generating video for activity " + activityId)
 
-//     var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+    // add latlongs to s3
+    await saveLatLongsToS3(activityId, latlongs);
 
+    // generate frames
+    await createFrames(latlongs, activityId);
 
-
-
-
-
-//     // if request has a flag, get latest activities from strava and add to what is in dynamodb
-//     if (req.headers['update-activities']=='true') {
-//         // get activities from strava
-//         const { data } = await axios.get('https://www.strava.com/api/v3/athlete/activities?page=1&per_page=50', {
-//             headers: {
-//                 Authorization: `Bearer ${process.env.ACCESS_TOKEN}`
-//             }
-//         })
-
-//         let newActivities = data.map(activity => {
-//             return {
-//                 id: activity.id,
-//                 name: activity.name,
-//                 date: activity.start_date,
-//                 distance: activity.distance
-//             }
-//         })
-
-//         // add activities to dynamodb
-
-
-       
-//     } else {
-//         // return activities from dynamodb
-
-//     }
-
-// })
+    // generate video
+    generateVidFromS3(activityId);
+})
 
 
 app.use('*', (req, res) => {

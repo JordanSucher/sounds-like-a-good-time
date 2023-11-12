@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const LandingPage = () => {
 
@@ -14,7 +15,7 @@ const LandingPage = () => {
     // check if there is a cookie with an access token. If so, they have logged in prior. If not, they are not logged in. If access token expired, refresh it
     useEffect(() => {
         // check if logged in
-        if (localStorage.getItem("access_token")) {
+        if (localStorage.getItem("access_token") || searchParams.get('code')) {
             console.log("logged in");
             setHasLoggedIn(true);
         }
@@ -29,6 +30,7 @@ const LandingPage = () => {
     const getAccessTokenAndActivities = async () => {
                     
         let token = localStorage.getItem('access_token');
+        let code = searchParams.get('code');
 
         if (!token) {
             let response = await axios.post(`https://www.strava.com/oauth/token?client_id=${process.env.STRAVA_CLIENT_ID}&client_secret=${process.env.STRAVA_CLIENT_SECRET}&code=${code}&grant_type=authorization_code`);
@@ -86,7 +88,11 @@ const LandingPage = () => {
         return (
             <ul>
                 {activities.map((activity) => {
-                    return <li>{activity.date} {activity.name} - {(activity.distance / 1609.34).toFixed(2)} miles</li>
+                    return (
+                    <Link to={`/ride/${activity.id}`} key={activity.id}>
+                        <li>{activity.date} {activity.name} - {(activity.distance / 1609.34).toFixed(2)} miles</li>
+                    </Link>
+                    )
                 })}
             </ul>
         )
