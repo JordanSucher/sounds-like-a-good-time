@@ -1,7 +1,7 @@
 import axios from "axios";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
+// dotenv.config();
 import { uploadFromStream } from "./awsHelper.js";
-dotenv.config();
 
 // Tile Setup
 export const z = 19;

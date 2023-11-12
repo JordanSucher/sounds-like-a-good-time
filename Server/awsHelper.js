@@ -1,9 +1,9 @@
 import axios from "axios"
-import dotenv from "dotenv"
+// import dotenv from "dotenv"
+// dotenv.config()
 import AWS from "aws-sdk";
 import { PassThrough } from "stream";
 import {downloadTileFromMapboxToS3} from "./tileHelper.js";
-dotenv.config()
 import fs from 'fs'
 
 let bucketName = 'ridevisualizer'
