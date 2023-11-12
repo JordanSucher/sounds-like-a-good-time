@@ -58,15 +58,16 @@ export const generateVidFromS3 = (activityId) => {
             console.error('Error:', err);
         })
         .on('progress', function(progress) {
-            progressLog[activityId].push('Generating video: ' + progress.percent + '% done (this goes to ~125%, unsure why)')
+            progressLog[activityId].push('Generating video: ' + progress.percent + '% done')
             console.log('Processing: ' + progress.percent + '% done');
         })
         .on('end', async function() {
             progressLog[activityId].push('Video created successfully')
             console.log('Video created successfully');
             await uploadVideoFromFile(activityId)
+            progressLog[activityId].push("everything done")
     
-            fs.unlink(`${activityId}.mp4}`, (err) => {
+            fs.unlink(`${activityId}.mp4`, (err) => {
                 if (err) {
                     console.error('Error deleting file:', err);
                 } else {

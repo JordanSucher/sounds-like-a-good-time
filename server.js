@@ -113,8 +113,6 @@ app.post('/api/video', async (req, res) => {
 
     // generate video
     generateVidFromS3(activityId);
-
-    progressLog[activityId].push("everything done")
 })
 
 
