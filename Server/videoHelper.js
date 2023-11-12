@@ -1,8 +1,5 @@
 import ffmpeg from 'fluent-ffmpeg'
-import path from 'path'
-import { fileURLToPath } from 'url';
 import { uploadVideoFromFile } from './awsHelper.js';
-import { PassThrough } from 'stream';
 import fs from 'fs';
 
 

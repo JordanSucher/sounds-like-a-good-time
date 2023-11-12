@@ -7,8 +7,6 @@
 
 import axios from "axios";
 import dotenv from "dotenv";
-import sampleLatLongs from "../sampleLatLongs.json" assert { type: "json" };
-import AWS from "aws-sdk";
 dotenv.config();
 import sharp from "sharp";
 import {
