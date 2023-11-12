@@ -1,6 +1,6 @@
 import axios from "axios"
-// import dotenv from "dotenv"
-// dotenv.config()
+import dotenv from "dotenv"
+dotenv.config()
 import AWS from "aws-sdk";
 import { PassThrough } from "stream";
 import {downloadTileFromMapboxToS3} from "./tileHelper.js";
