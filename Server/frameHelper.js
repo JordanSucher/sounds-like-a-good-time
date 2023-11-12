@@ -92,7 +92,8 @@ async function generateFrame(canvasInput, coord, frameIndex, activityId) {
 
 export const createFrames = async (latLongs, activityId, zoom = z) => {
   // step 0 : get file directory
-  let fileDirectory = await getFileDirectory(`${activityId}/tiles`);
+  let tileDirectory = await getFileDirectory(`${activityId}/tiles`);
+  let frameDirectory = await getFileDirectory(`${activityId}/frames`);
 
   // step 0.5: set ysize
   setYSize(latLongs, zoom);
@@ -109,7 +110,7 @@ export const createFrames = async (latLongs, activityId, zoom = z) => {
       try {
         // step 0.75: check if frame exists and if so skip
         if (
-          fileDirectory.has(`${activityId}/frames/frame${globalIndex}.webp`)
+          frameDirectory.has(`${activityId}/frames/frame${globalIndex}.webp`)
         ) {
           progressLog[activityId].push(
             `Frame ${globalIndex} exists, skipping`
@@ -136,7 +137,7 @@ export const createFrames = async (latLongs, activityId, zoom = z) => {
 
         // step 3,ensure that tiles are in S3
 
-        await addTilesToS3(activityId, tileSet, fileDirectory);
+        await addTilesToS3(activityId, tileSet, tileDirectory);
 
         progressLog[activityId].push(`done adding tiles for frame ${globalIndex} to S3`)
         console.log(`done adding tiles for frame ${globalIndex} to S3`);
