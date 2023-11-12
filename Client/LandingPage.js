@@ -78,7 +78,7 @@ const LandingPage = () => {
         // user has not logged in with Strava
         return (
             <div className="LandingPage">
-                <a href={`http://strava.com/oauth/authorize?client_id=${process.env.STRAVA_CLIENT_ID}&response_type=code&scope=read_all,activity:read_all&redirect_uri=http://localhost:8000/`}>Login with Strava</a>
+                <a href={`http://strava.com/oauth/authorize?client_id=${process.env.STRAVA_CLIENT_ID}&response_type=code&scope=read_all,activity:read_all&redirect_uri=${process.env.REDIRECT_URI}`}>Login with Strava</a>
             </div>
         )
     }
