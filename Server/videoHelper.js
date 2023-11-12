@@ -49,7 +49,7 @@ export const generateVidFromS3 = (activityId) => {
         ])
         .map('[grid]')
         .videoCodec('libx264')
-        .addOption('-crf', '34', '-preset', 'ultrafast')
+        .addOption('-crf', '34', '-preset', 'ultrafast', '-loglevel', 'debug')
         .format('mp4')
         .output(`${activityId}.mp4`)
         // .output(videoStream) // Output
