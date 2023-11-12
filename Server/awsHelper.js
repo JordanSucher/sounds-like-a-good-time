@@ -1,10 +1,8 @@
 import axios from "axios"
 import dotenv from "dotenv"
-import sampleLatLongs from "../sampleLatLongs.json" assert { type: "json" }
 import AWS from "aws-sdk";
 import { PassThrough } from "stream";
 import {downloadTileFromMapboxToS3} from "./tileHelper.js";
-import { generateVidFromS3 } from "./videoHelper.js";
 dotenv.config()
 import fs from 'fs'
 
