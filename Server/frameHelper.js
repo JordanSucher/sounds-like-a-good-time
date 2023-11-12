@@ -25,6 +25,7 @@ import {
   ySize,
   xSize,
 } from "./tileHelper.js";
+import { progressLog } from "../server.js";
 
 const frameWidth = 256;
 const frameHeight = 256;
@@ -53,9 +54,11 @@ async function generateFrame(canvasInput, coord, frameIndex, activityId) {
   left = parseInt(left) - frameWidth / 2;
   top = parseInt(top) - frameHeight / 2;
 
+
   console.log(`Generating frame: ${frameIndex}`);
+  progressLog[activityId].push(`Generating frame: ${frameIndex}`);
   console.log(`Left: ${left}, Top: ${top}`);
-  console.log(`Frame dimensions: ${frameWidth}x${frameHeight}`);
+  
 
   try {
     let canvas = await sharp({
@@ -106,11 +109,12 @@ export const createFrames = async (latLongs, activityId, zoom = z) => {
       try {
         // step 0.75: check if frame exists and if so skip
         if (
-          (await checkIfInS3(
-            `${activityId}/frames/frame${globalIndex}.webp`
-          )) == true
+          fileDirectory.has(`${activityId}/frames/frame${globalIndex}.webp`)
         ) {
-          console.log("Frame exists, skipping");
+          progressLog[activityId].push(
+            `Frame ${globalIndex} exists, skipping`
+          )
+          console.log(`Frame ${globalIndex} exists, skipping`);
           return;
         }
 
@@ -134,7 +138,8 @@ export const createFrames = async (latLongs, activityId, zoom = z) => {
 
         await addTilesToS3(activityId, tileSet, fileDirectory);
 
-        console.log("done adding tiles to S3");
+        progressLog[activityId].push(`done adding tiles for frame ${globalIndex} to S3`)
+        console.log(`done adding tiles for frame ${globalIndex} to S3`);
 
         // step 4:assemble canvas input
 
@@ -151,6 +156,7 @@ export const createFrames = async (latLongs, activityId, zoom = z) => {
               top: (tile.y - minY) * frameHeight,
             };
           } catch (err) {
+            progressLog[activityId].push(err, `x${tile.x}-y${tile.y}.webp`)
             console.log(err, `x${tile.x}-y${tile.y}.webp`);
           }
         });
@@ -174,6 +180,7 @@ export const createFrames = async (latLongs, activityId, zoom = z) => {
         // step 6: grab the frame
         await generateFrame(canvasInput, frameCoord, globalIndex, activityId);
       } catch (err) {
+        progressLog[activityId].push(err, `frame ${globalIndex}`)
         console.error(`Error generating frame ${globalIndex}:`, err);
       }
     });
@@ -181,6 +188,7 @@ export const createFrames = async (latLongs, activityId, zoom = z) => {
     await Promise.all(promises);
   }
 
+  progressLog[activityId].push("done creating frames")
   console.log("done creating frames");
 
 };

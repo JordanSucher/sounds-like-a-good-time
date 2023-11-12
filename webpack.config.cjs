@@ -1,5 +1,6 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
 
 
 module.exports = {
@@ -48,11 +49,24 @@ module.exports = {
       "os": require.resolve("os-browserify/browser"),
       "stream": require.resolve("stream-browserify"),
       "util": require.resolve("util/"),
-      "crypto": false 
+      "crypto": false,
+      "assert": require.resolve("assert/"),
+      "https": false,
+      "http": false,
+      "zlib": false,
+      "tls": false,
+      "net": false,
+      "process": require.resolve('process/browser')
+
+
      }
   },
   plugins: [
-    new Dotenv()
+    new Dotenv(),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
+
   ]
   
 };

@@ -1,5 +1,5 @@
-// import dotenv from 'dotenv'
-// dotenv.config()
+import dotenv from 'dotenv'
+dotenv.config()
 import axios from 'axios'
 import express from 'express'
 import path from 'path'
@@ -10,6 +10,7 @@ import cors from 'cors';
 import { checkIfInS3, saveLatLongsToS3 } from './Server/awsHelper.js'
 import { createFrames } from './Server/frameHelper.js'
 import { generateVidFromS3 } from './Server/videoHelper.js'
+export let progressLog = {}
 
 
 const app = express()
@@ -75,7 +76,7 @@ app.get('/api/images', (req, res) => {
     });
 });
 
-app.get('/api/video', async (req, res) => {
+app.get('/api/simplestatus', async (req, res) => {
     let activityId = req.query.activityId;
     let activityInS3 = await checkIfInS3(activityId)
     let videoInS3 = await checkIfInS3(`${activityId}/video.mp4`)
@@ -87,13 +88,22 @@ app.get('/api/video', async (req, res) => {
     } else {
         res.json({ status: 'notInS3' })
     }
+})
 
+app.get('/api/progress', (req, res) => {
+    let activityId = req.query.activityId
+
+    fs.writeFileSync('./progressLog.json', JSON.stringify(progressLog, null, 2))
+    if (progressLog[activityId]) progressLog[activityId] = progressLog[activityId].slice(-50)
+    res.send(progressLog[activityId])
 })
 
 app.post('/api/video', async (req, res) => {
     let activityId = req.body.activityId;
     let latlongs = req.body.latlongs;
     res.send("Ok, generating video for activity " + activityId)
+
+    progressLog[activityId] = []
 
     // add latlongs to s3
     await saveLatLongsToS3(activityId, latlongs);
@@ -103,6 +113,8 @@ app.post('/api/video', async (req, res) => {
 
     // generate video
     generateVidFromS3(activityId);
+
+    progressLog[activityId].push("everything done")
 })
 
 

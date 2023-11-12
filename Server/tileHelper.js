@@ -2,6 +2,8 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 import { uploadFromStream } from "./awsHelper.js";
+import { progressLog } from "../server.js";
+
 
 // Tile Setup
 export const z = 19;
@@ -71,5 +73,6 @@ export const downloadTileFromMapboxToS3 = async (tile, activityId) => {
         uploadFromStream(activityId, tile, res.data);
     } catch (err) {
         console.error("Error:", err);
+        progressLog[activityId].push(`Error: ${err}`)
     }
 }

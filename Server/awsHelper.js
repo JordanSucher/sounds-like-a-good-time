@@ -1,10 +1,11 @@
-import axios from "axios"
 import dotenv from "dotenv"
 dotenv.config()
 import AWS from "aws-sdk";
 import { PassThrough } from "stream";
 import {downloadTileFromMapboxToS3} from "./tileHelper.js";
 import fs from 'fs'
+import { progressLog } from "../server.js";
+
 
 let bucketName = 'ridevisualizer'
 
@@ -52,6 +53,7 @@ export const saveLatLongsToS3 = async (activityId, latLongs) => {
         }
 
         console.log("saving latLongs to S3")
+        progressLog[activityId].push(`saving latLongs to S3`)
         await s3.putObject(params).promise()
     }    
 
@@ -99,21 +101,37 @@ export const uploadFromStream = async (activityId, tile, sourceStream) => {
     }, (err, data) => {
         if (err) {
             console.log(err)
+            progressLog[activityId].push(`failed to upload tile ${tile.x}-${tile.y}`)
         } else {
+            progressLog[activityId].push(`uploaded tile ${tile.x}-${tile.y}`)
             console.log("success: ",data)
         }
     }).promise()
+
+    // clean up
+    pass.destroy();
 }
 
 export const uploadVideoFromFile = async (activityId) => {
     let path = `${activityId}.mp4`
+    let stream = fs.createReadStream(path)
 
     await s3.upload({
         Bucket: bucketName,
         Key: `${activityId}/video.mp4`,
-        Body: fs.createReadStream(path),
+        Body: stream,
         ContentType: 'video/mp4',
+    }, (err, data) => {
+        if (err) {
+            progressLog[activityId].push(`failed to upload video`)
+            console.log(err)
+        } else {
+            progressLog[activityId].push(`uploaded video`)
+            console.log("success: ",data)
+        }
     }).promise()
+
+    stream.destroy()
 
 }
 
@@ -125,8 +143,10 @@ export const uploadFromBuffer = async (activityId, index, buffer) => {
         ContentType: 'image/webp',
     }, (err, data) => {
         if (err) {
+            progressLog[activityId].push(`failed to upload frame ${index}`)
             console.log(err)
         } else {
+            progressLog[activityId].push(`uploaded frame ${index}`)
             console.log("success: ",data)
         }
     }).promise()
@@ -140,9 +160,7 @@ export const addTilesToS3 = async (activityId, tiles, fileDirectory) => {
         if (fileDirectory.has(prefix)) {
             return
         } else {
-            console.log(`saving tile to S3 - ${prefix}`)
             await downloadTileFromMapboxToS3(tile, activityId)
-            console.log("done saving tile to S3")
         }   
     })
     

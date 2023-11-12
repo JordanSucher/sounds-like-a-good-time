@@ -1,6 +1,8 @@
 import ffmpeg from 'fluent-ffmpeg'
 import { uploadVideoFromFile } from './awsHelper.js';
 import fs from 'fs';
+import { progressLog } from "../server.js";
+
 
 
 export const generateVidFromS3 = (activityId) => {
@@ -52,12 +54,15 @@ export const generateVidFromS3 = (activityId) => {
         .output(`${activityId}.mp4`)
         // .output(videoStream) // Output
         .on('error', function(err) {
+            progressLog[activityId].push('Error generating video')
             console.error('Error:', err);
         })
         .on('progress', function(progress) {
+            progressLog[activityId].push('Generating video: ' + progress.percent + '% done (this goes to ~125%, unsure why)')
             console.log('Processing: ' + progress.percent + '% done');
         })
         .on('end', async function() {
+            progressLog[activityId].push('Video created successfully')
             console.log('Video created successfully');
             await uploadVideoFromFile(activityId)
     

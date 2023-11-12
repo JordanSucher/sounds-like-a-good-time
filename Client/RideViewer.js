@@ -1,9 +1,8 @@
 // src/App.js
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ImageGrid from './ImageGrid.js';
 import DraggableCircle from './Circle.js';
-import { preloadImages } from '../preloadImages.js';
 import { useParams } from 'react-router-dom';
 
 // Create a context for all .jpg files inside the 'accident-ride-frames-lofi' directory
