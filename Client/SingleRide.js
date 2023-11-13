@@ -1,17 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import Cryptr from 'cryptr';
 dotenv.config();
 
 const SingleRide = () => {
-    
+    const [searchParams, setSearchParams] = useSearchParams();
+    const custom = searchParams.get('custom');
     const { id } = useParams();
+    let activityIdRef = useRef(id);
+    if (custom == 'true') {
+        activityIdRef.current = 'custom/' + id
+    }
     let activities = localStorage.getItem('activities');
     activities = JSON.parse(activities);
-    let activity = activities.find(activity => activity.id == id);
+    let activity = activities ? activities.find(activity => activity.id == id) : {name:id, date:'N/A'};
     let [videoInS3, setVideoInS3] = useState('');
     let [latlongs, setLatlongs] = useState([]);
     let [progress, setProgress] = useState([]);
@@ -21,7 +26,7 @@ const SingleRide = () => {
 
     useEffect(() => {
         let cryptr = new Cryptr(process.env.SECRET)
-        let refreshToken = cryptr.decrypt(localStorage.getItem("refresh_token"));
+        let refreshToken = localStorage.getItem("refresh_token") ? cryptr.decrypt(localStorage.getItem("refresh_token")) : null
 
         let useRefreshToken = async () => {
             let {data} = await axios.post("https://www.strava.com/api/v3/oauth/token", {
@@ -41,11 +46,13 @@ const SingleRide = () => {
                     Authorization: `Bearer ${access_token}`
                 }
             })
-            // console.log("latlongs: ", data.latlng.data)
+
             setLatlongs(data.latlng.data)
         }
 
-        getLatLongs()
+        if (refreshToken) {
+            getLatLongs()
+        }
 
     },[id])
 
@@ -53,7 +60,7 @@ const SingleRide = () => {
     useEffect(() => {
         // check if video is in S3
         let check = async () => {
-            let { data } = await axios.get('/api/simplestatus?activityId=' + id);
+            let { data } = await axios.get('/api/simplestatus?activityId=' + activityIdRef.current);
             console.log("data: ", data)
             setVideoInS3 (data.status)
             // if no progress, restart generation
@@ -68,15 +75,16 @@ const SingleRide = () => {
     const generateVideo = async () => {
         // mark video as in progress
         setVideoInS3('activityInS3')
+
         // initiate video generation
         await axios.post('/api/video', {
-            activityId: id,
+            activityId: activityIdRef.current,
             latlongs: latlongs
         })
     }
 
     const getProgress = async () => {
-        let { data } = await axios.get('/api/progress?activityId=' + id);
+        let { data } = await axios.get('/api/progress?activityId=' + activityIdRef.current);
         if (data[data.length - 1] == "everything done") {
             setVideoInS3('videoInS3')
         }
@@ -137,15 +145,15 @@ return (
                 </ul>
                 <div className="imgContainer"> 
                     <img 
-                        src={`https://d315wm83g1nlu7.cloudfront.net/${id}/frames/frame${currFrame}.webp`} 
+                        src={`https://d315wm83g1nlu7.cloudfront.net/${activityIdRef.current}/frames/frame${currFrame}.webp`} 
                         alt={`frame-${currFrame}`}
                     /> 
                     <img 
-                        src={`https://d315wm83g1nlu7.cloudfront.net/${id}/frames/frame${Math.max(currFrame-5,0)}.webp`} 
+                        src={`https://d315wm83g1nlu7.cloudfront.net/${activityIdRef.current}/frames/frame${Math.max(currFrame-5,0)}.webp`} 
                         alt={`frame-${Math.max(currFrame-5,0)}`}
                     />
                     <img 
-                        src={`https://d315wm83g1nlu7.cloudfront.net/${id}/frames/frame${Math.max(currFrame-10,0)}.webp`} 
+                        src={`https://d315wm83g1nlu7.cloudfront.net/${activityIdRef.current}/frames/frame${Math.max(currFrame-10,0)}.webp`} 
                         alt={`frame-${Math.max(currFrame-10,0)}`}
                     />
                 </div>

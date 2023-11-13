@@ -7,9 +7,8 @@ import { fileURLToPath } from 'url';
 // import AWS from 'aws-sdk';
 import fs from 'fs';
 import cors from 'cors';
-import { checkIfInS3, saveLatLongsToS3 } from './Server/awsHelper.js'
+import { checkIfInS3, saveLatLongsToS3, getFileDirectory, getLatLongsFromS3 } from './Server/awsHelper.js'
 import { createFrames } from './Server/frameHelper.js'
-import { generateVidFromS3 } from './Server/videoHelper.js'
 import redis from 'redis'
 export let progressLog = {}
 
@@ -55,14 +54,6 @@ const getAthlete = async () => {
 }
 
 app.use(express.static(path.join(__dirname, '.', 'dist')))
-
-app.use(express.static(path.join(__dirname, '.', 'accident-ride-frames-lofi')))
-
-app.use(express.static(path.join(__dirname, '.', 'accident-ride-frames-lofi-compressed')))
-
-
-
-
 
 app.get('/', (req, res) => {
     res.setHeader('Surrogate-Control', 'no-store'); 
@@ -111,6 +102,30 @@ app.get('/api/simplestatus', async (req, res) => {
     }
 })
 
+app.get('/api/customactivities', async (req, res) => {
+    let activities = await getFileDirectory(`custom`)
+    let activitiesArray = Array.from(activities)
+    let deduped = new Set()
+    activitiesArray.map(activity => {
+        let parsed = activity.split('/')
+        let result = parsed ? parsed[1] : activity
+        deduped.add(result)
+    })
+    let dedupedArray = Array.from(deduped)
+
+    res.send(dedupedArray)
+})
+
+app.post('/api/customactivities', async (req, res) => {
+    let name = req.body.name;
+    let latlongs = req.body.latlongs;
+    let latlongsjson = JSON.parse(latlongs)
+    await saveLatLongsToS3(`custom/${name}`, latlongsjson)
+    progressLog[`custom/${name}`] = [`created custom activity ${name}`]
+    res.send("Ok, saved " + name)
+})
+
+
 app.get('/api/progress', (req, res) => {
     let activityId = req.query.activityId
     // fs.writeFileSync('./progressLog.json', JSON.stringify(progressLog, null, 2))
@@ -144,8 +159,13 @@ app.post('/api/video', async (req, res) => {
 
     progressLog[activityId] = []
 
-    // add latlongs to s3
-    await saveLatLongsToS3(activityId, latlongs);
+    // add latlongs to s3, if not custom
+    if (activityId.split('/')[0] !== 'custom') {
+        await saveLatLongsToS3(activityId, latlongs);
+    } else {
+        // get latlongs from s3
+        latlongs = await getLatLongsFromS3(activityId);
+    }
 
     // generate frames
     await createFrames(latlongs, activityId);

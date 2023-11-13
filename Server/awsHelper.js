@@ -37,8 +37,16 @@ export const checkIfInS3 = async (prefix) => {
     return Contents.length > 0
 }
 
+export const getLatLongsFromS3 = async (activityId) => {
+    let params = {
+        Bucket: bucketName,
+        Key: `${activityId}/latLongs.json`
+    }
+    let data = await s3.getObject(params).promise()
+    return JSON.parse(data.Body)
+}
+
 export const saveLatLongsToS3 = async (activityId, latLongs) => {
-    
     if (await checkIfInS3(activityId)) {
         return
     } else {
@@ -47,12 +55,10 @@ export const saveLatLongsToS3 = async (activityId, latLongs) => {
             Key: `${activityId}/latLongs.json`,
             Body: JSON.stringify(latLongs)
         }
-
         console.log("saving latLongs to S3")
-        progressLog[activityId].push(`saving latLongs to S3`)
+        if (progressLog[activityId])progressLog[activityId].push(`saving latLongs to S3`)
         await s3.putObject(params).promise()
     }    
-
 }
 
 export const getFileDirectory = async (prefix) => {

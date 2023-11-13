@@ -1,6 +1,5 @@
 // src/components/ImageGrid.js
 import React from 'react';
-import CyclingImage from './CyclingImage.js';
 
 const ImageGrid = ({id}) => {
     let searchParams = new URLSearchParams(window.location.search);

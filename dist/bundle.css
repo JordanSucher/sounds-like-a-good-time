@@ -30,7 +30,7 @@ body, .App{
 /* NAVBAR */
 
 .navbar {
-    height: 50px;
+    min-height: 50px;
     padding: 5px;
     display: flex;
     align-items: center;
@@ -263,4 +263,35 @@ button:disabled{
     font-size: 14px;
     outline: 1px solid black;  
     padding: 10px;
+}
+
+
+/* custom activity */
+
+.custom-activities{
+    margin-left: 30px;
+    margin-top: 30px;
+}
+
+.custom-activities p{
+    max-width: 500px;
+}
+
+.custom-activities form{
+    display: flex;
+    flex-direction: column;
+    margin: 30px;
+    margin-top: 0px;
+    height: 100%;
+    max-width: 400px;
+}
+
+
+.custom-activities input{
+    margin: 10px;
+}
+
+.custom-activities .submit{
+    margin-left: 0;
+    width: 100px;
 }
