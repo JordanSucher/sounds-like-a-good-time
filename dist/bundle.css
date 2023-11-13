@@ -164,6 +164,7 @@ img {
     .navbar {
         flex-direction: column;
         padding: 10px;
+        min-height: auto;
     }
 
     .navbar a{

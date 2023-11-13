@@ -13,7 +13,6 @@ dotenv.config();
 const LandingPage = () => {
 
     let [searchParams, setSearchParams] = useSearchParams();
-    // let hasLoggedIn = localStorage.get("access_token");
     let [hasLoggedIn, setHasLoggedIn] = useState(false); // hasLoggedIn = false;
     const [activities, setActivities] = useState([]);
 
