@@ -57,7 +57,7 @@ module.exports = {
       "tls": false,
       "net": false,
       "process": require.resolve('process/browser'),
-      "buffer": require.resolve(`buffer-browserify`),
+      "buffer": require.resolve(`buffer/`),
 
 
      }
