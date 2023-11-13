@@ -142,7 +142,8 @@ body, html{
 /* Single Ride */
 
 .single-ride {
-    margin: 50px
+    margin: 50px;
+    height: 100%
 }
 
 .single-ride span{

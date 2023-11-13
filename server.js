@@ -120,6 +120,7 @@ app.post('/api/progress', (req, res) => {
     let activityId = req.body.activityId;
     let progress = req.body.progress;
     progressLog[activityId].push(progress) // add progress
+    res.send("Ok, updated progress for activity " + activityId)
 })
 
 
