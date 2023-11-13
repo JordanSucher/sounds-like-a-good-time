@@ -47,7 +47,7 @@ const LandingPage = () => {
         return access_token
     }
 
-    const getAccessTokenAndActivities = async (getNew = true) => {
+    const getAccessTokenAndActivities = async (getNew = false) => {
                     
         let token = localStorage.getItem('access_token');
         let code = searchParams.get('code');
@@ -71,7 +71,7 @@ const LandingPage = () => {
 
         let savedActivities = localStorage.getItem('activities');
 
-        if (savedActivities || getNew == false) {
+        if (savedActivities && getNew == false) {
             console.log("pulled activities from local storage");
             let parsedActivities = JSON.parse(savedActivities);
             setActivities(parsedActivities);
