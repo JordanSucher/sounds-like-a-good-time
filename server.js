@@ -103,7 +103,9 @@ app.get('/api/simplestatus', async (req, res) => {
     if (videoInS3) {
         res.json({ status: 'videoInS3' })
     } else if (activityInS3) {
-        res.json({ status: 'activityInS3' })
+        res.json({ 
+            status: 'activityInS3',
+            progress: progressLog[activityId] ? progressLog[activityId].length : 0})
     } else {
         res.json({ status: 'notInS3' })
     }

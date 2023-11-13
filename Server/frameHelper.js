@@ -48,7 +48,7 @@ async function fetchWithRetry(url, retries = 0) {
 
 
 
-async function generateFrame(canvasInput, coord, frameIndex, activityId) {
+async function generateFrame(canvasInput, coord, frameIndex, activityId, totalFrames) {
   let left = coord.x;
   let top = coord.y;
   left = parseInt(left) - frameWidth / 2;
@@ -56,7 +56,7 @@ async function generateFrame(canvasInput, coord, frameIndex, activityId) {
 
 
   console.log(`Generating frame: ${frameIndex}`);
-  progressLog[activityId].push(`Generating frame ${frameIndex}`);
+  progressLog[activityId].push(`Generating frame ${frameIndex} of ${totalFrames}`);
   console.log(`Left: ${left}, Top: ${top}`);
   
 
@@ -139,7 +139,6 @@ export const createFrames = async (latLongs, activityId, zoom = z) => {
 
         await addTilesToS3(activityId, tileSet, tileDirectory);
 
-        progressLog[activityId].push(`done adding tiles for frame ${globalIndex} to S3`)
         console.log(`done adding tiles for frame ${globalIndex} to S3`);
 
         // step 4:assemble canvas input
@@ -179,7 +178,7 @@ export const createFrames = async (latLongs, activityId, zoom = z) => {
         };
 
         // step 6: grab the frame
-        await generateFrame(canvasInput, frameCoord, globalIndex, activityId);
+        await generateFrame(canvasInput, frameCoord, globalIndex, activityId, latLongs.length);
       } catch (err) {
         progressLog[activityId].push(err, `frame ${globalIndex}`)
         console.error(`Error generating frame ${globalIndex}:`, err);

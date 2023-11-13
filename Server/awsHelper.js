@@ -97,10 +97,7 @@ export const uploadFromStream = async (activityId, tile, sourceStream) => {
     }, (err, data) => {
         if (err) {
             console.log(err)
-            progressLog[activityId].push(`failed to upload tile ${tile.x}-${tile.y}`)
         } else {
-            progressLog[activityId].push(`uploaded tile ${tile.x}-${tile.y}`)
-            console.log("success: ",data)
         }
     }).promise()
 

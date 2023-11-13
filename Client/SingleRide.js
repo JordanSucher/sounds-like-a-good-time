@@ -52,6 +52,11 @@ const SingleRide = () => {
             let { data } = await axios.get('/api/simplestatus?activityId=' + id);
             console.log("data: ", data)
             setVideoInS3 (data.status)
+            // if no progress, restart generation
+            if (data.status == 'activityInS3' && data.progress == 0) {
+                generateVideo();
+            }
+
         }
         check()
     }, [id])
