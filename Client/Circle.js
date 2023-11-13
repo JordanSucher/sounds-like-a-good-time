@@ -16,8 +16,8 @@ const DraggableCircle = ({startPosition}) => {
         
         // Define a small bounding box around the circle.
         const captureSize = 2;  // Change size as needed. This is a 4x4 box.
-        const x = circleBounds.left - 1;
-        const y = circleBounds.top - 60;
+        const x = Math.max(1, circleBounds.left - 1);
+        const y = Math.max(1,circleBounds.top - 60);
 
         try {
             let vid = document.querySelector('video')
@@ -144,12 +144,14 @@ const DraggableCircle = ({startPosition}) => {
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
         
-            const x = clientX - offsetX;
-            const y = clientY - offsetY - document.querySelector('.navbar').getBoundingClientRect().height;
+            let x = clientX - offsetX;
+            let y = clientY - offsetY - document.querySelector('.navbar').getBoundingClientRect().height;
 
             // console.log("new x and y", x, y);
+            x = Math.min(document.querySelector('video').videoWidth-document.querySelector('.draggable-circle').getBoundingClientRect().width, x);
+            y = Math.min(document.querySelector('video').videoHeight-document.querySelector('.draggable-circle').getBoundingClientRect().height, y);
 
-            setCurrPosition({ x, y });
+            setCurrPosition({ x: Math.max(0,x), y: Math.max(0,y) });
 
             let circleX = circle.getBoundingClientRect().left;
             let circleY = circle.getBoundingClientRect().top;
