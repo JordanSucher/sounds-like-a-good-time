@@ -4,6 +4,8 @@ import { useParams, useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import Cryptr from 'cryptr';
+import {Buffer} from 'buffer';
+
 dotenv.config();
 
 const SingleRide = () => {

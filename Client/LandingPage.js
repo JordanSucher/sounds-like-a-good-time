@@ -4,6 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Cryptr from 'cryptr';
+import {Buffer} from 'buffer';
+
 
 import dotenv from 'dotenv';
 dotenv.config();
