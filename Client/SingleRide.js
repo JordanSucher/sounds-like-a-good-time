@@ -131,8 +131,8 @@ const SingleRide = () => {
 
 return (
     <div className='single-ride'>
-        <h1>{activity.name} - {activity.date}</h1>
-        <h2>{(activity.distance / 1609.34).toFixed(2)} miles</h2>
+        <h1>{activity && activity.name} - {activity && activity.date}</h1>
+        <h2>{(activity && activity.distance / 1609.34).toFixed(2)} miles</h2>
         <div>
             {(videoInS3 == 'notInS3') && <button onClick={()=>generateVideo()}>Generate Visualization</button> }
             {videoInS3 == 'activityInS3' && <button disabled>Visualization being generated. Come back in a bit.</button> }
