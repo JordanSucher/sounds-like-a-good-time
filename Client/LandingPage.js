@@ -110,9 +110,9 @@ const LandingPage = () => {
 
         return (
             <div className="LandingPage">
-                { activities && activities.length > 0 && <button onClick={()=>getAccessTokenAndActivities(true)}>Get Newer Rides</button> }
+                {activities && activities.length > 0 && <button onClick={()=>getAccessTokenAndActivities(true)}>Get Newer Rides</button> }
                 <ul>
-                    {activities.map((activity) => {
+                    {activities && activities.map((activity) => {
                         return (
                         <Link to={`/ride/${activity.id}`} key={activity.id}>
                             <li>{activity.date} {activity.name} - {(activity.distance / 1609.34).toFixed(2)} miles</li>
