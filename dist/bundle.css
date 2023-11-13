@@ -291,7 +291,7 @@ button:disabled{
     flex-direction: column;
     margin: 30px;
     margin-top: 0px;
-    height: fit-content
+    height: fit-content;
     max-width: 400px;
 }
 
