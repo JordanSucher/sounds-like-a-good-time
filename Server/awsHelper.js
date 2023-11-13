@@ -26,10 +26,6 @@ let s3 = new AWS.S3({apiVersion: '2006-03-01'});
     // generate a video from the frames and save it to S3
     // get the video link and somehow pass it to the client. maybe the client can infer the video link from the activity ID, check if it exists, and if it doesn't then allow the user to click generate visualization. or maybe the client can poll for the status of the video occasionally, server can check if video exists.
 
-let activityId = '10030777511'  
-
-// let url = `https://www.strava.com/api/v3/activities/${activityId}/streams?keys=latlng&key_by_type=true`
-
 
 export const checkIfInS3 = async (prefix) => {
     

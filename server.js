@@ -10,8 +10,8 @@ import cors from 'cors';
 import { checkIfInS3, saveLatLongsToS3 } from './Server/awsHelper.js'
 import { createFrames } from './Server/frameHelper.js'
 import { generateVidFromS3 } from './Server/videoHelper.js'
+import redis from 'redis'
 export let progressLog = {}
-
 
 const app = express()
 app.use(cors())
@@ -19,6 +19,25 @@ app.use(express.json({ limit: '2mb' }))
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const redisClient = redis.createClient({
+    url: process.env.REDIS_URL,
+    tls: {} //
+});
+
+redisClient.on("error", (err) => console.log("Redis Client Error", err));
+(async () => {
+    await redisClient.connect();
+    console.log('Redis client connected');
+})();
+
+process.on('SIGINT', () => {
+    redisClient.quit().then(() => {
+        console.log('Redis client disconnected');
+        process.exit(0);
+    });
+});
+
 
 
 const getAthlete = async () => {
@@ -92,11 +111,28 @@ app.get('/api/simplestatus', async (req, res) => {
 
 app.get('/api/progress', (req, res) => {
     let activityId = req.query.activityId
-
-    fs.writeFileSync('./progressLog.json', JSON.stringify(progressLog, null, 2))
+    // fs.writeFileSync('./progressLog.json', JSON.stringify(progressLog, null, 2))
     if (progressLog[activityId]) progressLog[activityId] = progressLog[activityId].slice(-50)
     res.send(progressLog[activityId])
 })
+
+app.post('/api/progress', (req, res) => {
+    let activityId = req.body.activityId;
+    let progress = req.body.progress;
+    progressLog[activityId].push(progress) // add progress
+})
+
+
+const enqueueVideoGenerationTask = async (activityId) => {
+    const queueName = 'video-queue'; // The same queue your worker listens on
+    const task = { activityId };
+    try {
+        await redisClient.rPush(queueName, JSON.stringify(task));
+    }
+    catch (err) {
+        console.error(err);
+    }
+};
 
 app.post('/api/video', async (req, res) => {
     let activityId = req.body.activityId;
@@ -112,7 +148,8 @@ app.post('/api/video', async (req, res) => {
     await createFrames(latlongs, activityId);
 
     // generate video
-    generateVidFromS3(activityId);
+    await enqueueVideoGenerationTask(activityId);
+
 })
 
 

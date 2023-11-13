@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -14,6 +14,9 @@ const SingleRide = () => {
     let [videoInS3, setVideoInS3] = useState('');
     let [latlongs, setLatlongs] = useState([]);
     let [progress, setProgress] = useState([]);
+    let progressRef = useRef([]);
+    let numFramesRef = useRef(1);
+    let [currFrame, setCurrFrame] = useState(0);
 
     useEffect(() => {
         let useRefreshToken = async () => {
@@ -47,6 +50,7 @@ const SingleRide = () => {
         // check if video is in S3
         let check = async () => {
             let { data } = await axios.get('/api/simplestatus?activityId=' + id);
+            console.log("data: ", data)
             setVideoInS3 (data.status)
         }
         check()
@@ -67,7 +71,20 @@ const SingleRide = () => {
         if (data[data.length - 1] == "everything done") {
             setVideoInS3('videoInS3')
         }
-        setProgress(data)
+        if (data[data.length - 1] !== progressRef.current[progressRef.current.length - 1]) {
+            setProgress(data)
+            progressRef.current = data
+        }
+        let pattern = /frame (\d+)/
+        let frameNums = data ? data.map(frame => {
+            let match = pattern.exec(frame)
+            if (!match) {
+                return 0
+            }
+            return match[1]
+        }) : [1]
+        let maxframe = Math.max(...frameNums)
+        numFramesRef.current = maxframe
     }
 
     useEffect(() => {
@@ -80,9 +97,21 @@ const SingleRide = () => {
         }
     }, [id])
 
+    // useEffect(() => {
+    //     console.log("new progress: ", progress)
+    // }, [progress])
+
     useEffect(() => {
-        console.log("new progress: ", progress)
-    }, [progress])
+        console.log("setting up interval")
+        let interval = setInterval(() => {
+            setCurrFrame((prevFrame) => (prevFrame + 1) % numFramesRef.current)
+        }, 1000)
+    
+        return function cleanup() {
+            clearInterval(interval)
+        }
+    
+    }, [])
 
 
 return (
@@ -90,16 +119,32 @@ return (
         <h1>{activity.name} - {activity.date}</h1>
         <h2>{(activity.distance / 1609.34).toFixed(2)} miles</h2>
         <div>
-            {videoInS3 == 'notInS3' || videoInS3 == 'activityInS3' && <button onClick={()=>generateVideo()}>Generate Visualization</button> }
+            {(videoInS3 == 'notInS3' || videoInS3 == 'activityInS3') && <button onClick={()=>generateVideo()}>Generate Visualization</button> }
             {videoInS3 == 'activityInS3' && <button disabled>Visualization being generated. Check back later.</button> }
             {videoInS3 == 'videoInS3' && <Link to={`/visualize/${id}`}>Play Ride</Link>}
 
             {progress && progress.length > 0 &&
-            <ul>
-                {progress.reverse().map((log) => {
-                   return <li>{log}</li>
-                })}
-            </ul>
+            <span>
+                <ul>
+                    {progress.toReversed().map((log) => {
+                    return <li>{log}</li>
+                    })}
+                </ul>
+                <div className="imgContainer"> 
+                    <img 
+                        src={`https://d315wm83g1nlu7.cloudfront.net/${id}/frames/frame${currFrame}.webp`} 
+                        alt={`frame-${currFrame}`}
+                    /> 
+                    <img 
+                        src={`https://d315wm83g1nlu7.cloudfront.net/${id}/frames/frame${Math.max(currFrame-5,0)}.webp`} 
+                        alt={`frame-${currFrame-5}`}
+                    />
+                    <img 
+                        src={`https://d315wm83g1nlu7.cloudfront.net/${id}/frames/frame${Math.max(currFrame-10,0)}.webp`} 
+                        alt={`frame-${currFrame-10}`}
+                    />
+                </div>
+            </span>
             }
         </div>
     </div>

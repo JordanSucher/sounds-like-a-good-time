@@ -56,7 +56,7 @@ async function generateFrame(canvasInput, coord, frameIndex, activityId) {
 
 
   console.log(`Generating frame: ${frameIndex}`);
-  progressLog[activityId].push(`Generating frame: ${frameIndex}`);
+  progressLog[activityId].push(`Generating frame ${frameIndex}`);
   console.log(`Left: ${left}, Top: ${top}`);
   
 
