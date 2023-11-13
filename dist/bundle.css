@@ -6,6 +6,8 @@
 
 p, ul, li, body{
     font-family: "Eighties", monospace;
+    text-align: left;
+    
 }
 
 body, .RideViewer{
@@ -87,8 +89,6 @@ img {
     margin-top: 90px;
 }
 
-
-/* src/components/ImageGrid.css */
 
 body, html{
     margin: 0;
@@ -183,17 +183,18 @@ body, html{
     display: flex;
     justify-content: left;
     padding-bottom: 50px;
+    max-height: 700px;
 }
 
 .single-ride img{
-    width: 256px;
-    height: 256px;
+    width: 200px;
+    height: 200px;
 }
 
 .single-ride ul {
     max-width: 500px;
     margin-right: 100px;
-    max-height: 500px;
+    max-height: 700px;
     overflow: hidden;
 }
 
@@ -203,6 +204,34 @@ body, html{
     align-items: center;
 }
 
+.single-ride div{
+    margin-top: 30px;
+    height: fit-content;
+    width: fit-content;
+}
+
+.single-ride a{
+    margin-top: 20px;
+    color: black;
+    background-color: white;
+    font-family: monospace, sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 14px;
+    outline: 1px solid black;  
+    padding: 10px;
+}
+
+.single-ride a:hover{
+    text-decoration: underline;
+    color: blue;
+}
+
+.single-ride a:active{
+    background-color: lightgray;
+}
+
+
 
 /*  global button */
 
@@ -210,10 +239,20 @@ button{
     color: black;
     background-color: white;
     font-family: monospace, sans-serif;
+    font-weight: bold;
     text-decoration: none;
     font-size: 14px;
     outline: 1px solid black;  
     padding: 10px;
+}
+
+button:hover{
+    text-decoration: underline;
+    color: blue;
+}
+
+button:active{
+    background-color: lightgray;
 }
 
 button:disabled{

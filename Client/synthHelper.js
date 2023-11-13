@@ -88,6 +88,7 @@ export function triggerAttack({ l, y, x }) {
 
 }
 
+
 export function computeLuminance(rgb) {
     let rgbArr = rgb.split(",");
     const R = rgbArr[0] / 255;

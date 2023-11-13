@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Cryptr from 'cryptr';
+
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -29,36 +31,53 @@ const LandingPage = () => {
         }
     }, [hasLoggedIn, searchParams]);
 
-    const getAccessTokenAndActivities = async () => {
+    let useRefreshToken = async () => {
+        let cryptr = new Cryptr(process.env.SECRET)
+        let refreshToken = cryptr.decrypt(localStorage.getItem("refresh_token"));
+
+        let {data} = await axios.post("https://www.strava.com/api/v3/oauth/token", {
+            client_id: process.env.STRAVA_CLIENT_ID,
+            client_secret: process.env.STRAVA_CLIENT_SECRET,
+            refresh_token: refreshToken,
+            grant_type: "refresh_token"
+        })
+        let access_token = data.access_token;
+        return access_token
+    }
+
+    const getAccessTokenAndActivities = async (getNew = false) => {
                     
         let token = localStorage.getItem('access_token');
         let code = searchParams.get('code');
+        let cryptr = new Cryptr(process.env.SECRET)
 
         if (!token) {
             let response = await axios.post(`https://www.strava.com/oauth/token?client_id=${process.env.STRAVA_CLIENT_ID}&client_secret=${process.env.STRAVA_CLIENT_SECRET}&code=${code}&grant_type=authorization_code`);
-            let token = response.data.access_token;
-            let refresh = response.data.refresh_token;
-            let expiresAt = response.data.expires_at;
-            let athleteID = response.data.athlete.id;
+            let token = cryptr.encrypt(response.data.access_token);
+            let refresh = cryptr.encrypt(response.data.refresh_token);
+            let athleteID = cryptr.encrypt(response.data.athlete.id);
     
             localStorage.setItem('access_token', token);
             localStorage.setItem('refresh_token', refresh);
-            localStorage.setItem('expires_at', expiresAt);
             localStorage.setItem('athlete_id', athleteID);
+        } else {
+            let newtoken = await useRefreshToken();
+            localStorage.setItem('access_token', cryptr.encrypt(newtoken));
         }
 
         // check if there are activities in local storage
 
         let savedActivities = localStorage.getItem('activities');
 
-        if (savedActivities) {
+        if (savedActivities, getNew == false) {
             console.log("pulled activities from local storage");
             let parsedActivities = JSON.parse(savedActivities);
             setActivities(parsedActivities);
         } else {
+            let accessToken = cryptr.decrypt(localStorage.getItem('access_token'));
             const { data } = await axios.get('https://www.strava.com/api/v3/athlete/activities?page=1&per_page=50', {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`
+                    Authorization: `Bearer ${accessToken}`
                 }
             })
     
@@ -84,19 +103,23 @@ const LandingPage = () => {
             </div>
         )
     }
+    
     else {
         // user has logged in with Strava. We either have a code to get activities or we already have a token.
 
         return (
-            <ul>
-                {activities.map((activity) => {
-                    return (
-                    <Link to={`/ride/${activity.id}`} key={activity.id}>
-                        <li>{activity.date} {activity.name} - {(activity.distance / 1609.34).toFixed(2)} miles</li>
-                    </Link>
-                    )
-                })}
-            </ul>
+            <div className="LandingPage">
+                <button onClick={()=>getAccessTokenAndActivities(true)}>Get Newer Rides</button>
+                <ul>
+                    {activities.map((activity) => {
+                        return (
+                        <Link to={`/ride/${activity.id}`} key={activity.id}>
+                            <li>{activity.date} {activity.name} - {(activity.distance / 1609.34).toFixed(2)} miles</li>
+                        </Link>
+                        )
+                    })}
+                </ul>
+            </div>
         )
     }
 }

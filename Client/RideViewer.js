@@ -1,15 +1,24 @@
 // src/App.js
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import ImageGrid from './ImageGrid.js';
 import DraggableCircle from './Circle.js';
 import { useParams } from 'react-router-dom';
+import { synth } from './synthHelper.js';
 
 // Create a context for all .jpg files inside the 'accident-ride-frames-lofi' directory
 
 function RideViewer() {
   const { id } = useParams();
   
+  useEffect(() => {
+    // on unmount, stop synth
+    return () => {
+      if (synth) {
+        synth.triggerAttackRelease('C2', '4n');
+      }
+    };
+  })
 
     return (
       <>

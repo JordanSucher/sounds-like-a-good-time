@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import Cryptr from 'cryptr';
 dotenv.config();
 
 const SingleRide = () => {
@@ -19,11 +20,14 @@ const SingleRide = () => {
     let [currFrame, setCurrFrame] = useState(0);
 
     useEffect(() => {
+        let cryptr = new Cryptr(process.env.SECRET)
+        let refreshToken = cryptr.decrypt(localStorage.getItem("refresh_token"));
+
         let useRefreshToken = async () => {
             let {data} = await axios.post("https://www.strava.com/api/v3/oauth/token", {
                 client_id: process.env.STRAVA_CLIENT_ID,
                 client_secret: process.env.STRAVA_CLIENT_SECRET,
-                refresh_token: localStorage.getItem("refresh_token"),
+                refresh_token: refreshToken,
                 grant_type: "refresh_token"
             })
             let access_token = data.access_token;
@@ -138,11 +142,11 @@ return (
                     /> 
                     <img 
                         src={`https://d315wm83g1nlu7.cloudfront.net/${id}/frames/frame${Math.max(currFrame-5,0)}.webp`} 
-                        alt={`frame-${currFrame-5}`}
+                        alt={`frame-${Math.max(currFrame-5,0)}`}
                     />
                     <img 
                         src={`https://d315wm83g1nlu7.cloudfront.net/${id}/frames/frame${Math.max(currFrame-10,0)}.webp`} 
-                        alt={`frame-${currFrame-10}`}
+                        alt={`frame-${Math.max(currFrame-10,0)}`}
                     />
                 </div>
             </span>

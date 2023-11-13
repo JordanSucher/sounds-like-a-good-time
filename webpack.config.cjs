@@ -49,7 +49,7 @@ module.exports = {
       "os": require.resolve("os-browserify/browser"),
       "stream": require.resolve("stream-browserify"),
       "util": require.resolve("util/"),
-      "crypto": false,
+      "crypto": require.resolve("crypto-browserify"),
       "assert": require.resolve("assert/"),
       "https": false,
       "http": false,
