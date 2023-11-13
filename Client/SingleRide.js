@@ -97,10 +97,6 @@ const SingleRide = () => {
         }
     }, [id])
 
-    // useEffect(() => {
-    //     console.log("new progress: ", progress)
-    // }, [progress])
-
     useEffect(() => {
         console.log("setting up interval")
         let interval = setInterval(() => {
@@ -119,7 +115,7 @@ return (
         <h1>{activity.name} - {activity.date}</h1>
         <h2>{(activity.distance / 1609.34).toFixed(2)} miles</h2>
         <div>
-            {(videoInS3 == 'notInS3' || videoInS3 == 'activityInS3') && <button onClick={()=>generateVideo()}>Generate Visualization</button> }
+            {(videoInS3 == 'notInS3') && <button onClick={()=>generateVideo()}>Generate Visualization</button> }
             {videoInS3 == 'activityInS3' && <button disabled>Visualization being generated. Check back later.</button> }
             {videoInS3 == 'videoInS3' && <Link to={`/visualize/${id}`}>Play Ride</Link>}
 
