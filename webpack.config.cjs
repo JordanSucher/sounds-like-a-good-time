@@ -56,7 +56,8 @@ module.exports = {
       "zlib": false,
       "tls": false,
       "net": false,
-      "process": require.resolve('process/browser')
+      "process": require.resolve('process/browser'),
+      "buffer": require.resolve(`buffer-browserify`),
 
 
      }
