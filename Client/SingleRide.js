@@ -18,7 +18,7 @@ const SingleRide = () => {
     }
     let activities = localStorage.getItem('activities');
     activities = JSON.parse(activities);
-    let activity = activities ? activities.find(activity => activity.id == id) : {name:id, date:'N/A'};
+    let activity = (activities && activities.find(activity => activity.id == id))? activities.find(activity => activity.id == id) : {name:id, date:'N/A'};
     let [videoInS3, setVideoInS3] = useState('');
     let [latlongs, setLatlongs] = useState([]);
     let [progress, setProgress] = useState([]);
