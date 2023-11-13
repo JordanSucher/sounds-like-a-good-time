@@ -37,7 +37,7 @@ const SingleRide = () => {
                     Authorization: `Bearer ${access_token}`
                 }
             })
-            console.log("latlongs: ", data.latlng.data)
+            // console.log("latlongs: ", data.latlng.data)
             setLatlongs(data.latlng.data)
         }
 

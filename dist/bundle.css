@@ -38,7 +38,16 @@ body, .App{
 .navbar p, .navbar a{
     margin-left: 20px;
     color: black;
-    font-weight: 400;
+    text-decoration: none;
+}
+
+.navbar p{
+    font-weight: bold;
+}
+
+.navbar *:hover{
+    text-decoration: wavy underline;
+    color: blue;
 }
 
 .draggable-circle {
@@ -137,6 +146,30 @@ body, html{
         height: 50px;
         border-width: 10px;   
     }
+}
+
+/* Landing Page */
+
+.LandingPage{
+    margin-left: 45px;
+    margin-top: 45px;
+    font-weight: bold;
+}
+
+.LoginButton{
+    color: black;
+    background-color: white;
+    font-family: monospace, sans-serif;
+    text-decoration: none;
+    font-size: 14px;
+    outline: 1px solid black;  
+    /* border-radius: 100px; */
+    padding: 10px;
+}
+
+.LoginButton:hover{
+    text-decoration: wavy underline;
+    color: blue
 }
 
 /* Single Ride */
