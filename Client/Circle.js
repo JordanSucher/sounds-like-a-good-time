@@ -148,8 +148,8 @@ const DraggableCircle = ({startPosition}) => {
             let y = clientY - offsetY - document.querySelector('.navbar').getBoundingClientRect().height;
 
             // console.log("new x and y", x, y);
-            x = Math.min(document.querySelector('video').videoWidth-document.querySelector('.draggable-circle').getBoundingClientRect().width, x);
-            y = Math.min(document.querySelector('video').videoHeight-document.querySelector('.draggable-circle').getBoundingClientRect().height, y);
+            x = Math.min(document.querySelector('video').videoWidth, x);
+            y = Math.min(document.querySelector('video').videoHeight, y);
 
             setCurrPosition({ x: Math.max(0,x), y: Math.max(0,y) });
 
