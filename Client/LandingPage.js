@@ -111,7 +111,7 @@ const LandingPage = () => {
 
         return (
             <div className="LandingPage">
-                <button onClick={()=>getAccessTokenAndActivities(true)}>Get Newer Rides</button>
+                { activities && activities.length > 0 && <button onClick={()=>getAccessTokenAndActivities(true)}>Get Newer Rides</button> }
                 <ul>
                     {activities.map((activity) => {
                         return (
