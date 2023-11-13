@@ -116,7 +116,7 @@ return (
         <h2>{(activity.distance / 1609.34).toFixed(2)} miles</h2>
         <div>
             {(videoInS3 == 'notInS3') && <button onClick={()=>generateVideo()}>Generate Visualization</button> }
-            {videoInS3 == 'activityInS3' && <button disabled>Visualization being generated. Check back later.</button> }
+            {videoInS3 == 'activityInS3' && <button disabled>Visualization being generated. Come back in a bit.</button> }
             {videoInS3 == 'videoInS3' && <Link to={`/visualize/${id}`}>Play Ride</Link>}
 
             {progress && progress.length > 0 &&
