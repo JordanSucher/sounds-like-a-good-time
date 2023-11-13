@@ -200,9 +200,8 @@ img {
 
 .single-ride ul {
     max-width: 500px;
-    margin-right: 100px;
+    min-width: 90px;
     max-height: 700px;
-    overflow: hidden;
 }
 
 .single-ride .imgContainer {
@@ -214,7 +213,7 @@ img {
 .single-ride div{
     margin-top: 30px;
     height: fit-content;
-    width: fit-content;
+    width: 100%;
 }
 
 .single-ride a{
@@ -325,6 +324,19 @@ button:disabled{
 
     .LandingPage{
         margin: 15px;
+    }
+
+    .single-ride img{
+        width: 90px;
+        height: 90px;
+    }
+
+    h1{
+        font-size: 20px
+    }
+
+    h2{
+        font-size: 16px
     }
 
 }
