@@ -1,6 +1,6 @@
 import * as Tone from 'tone';
 
-const synth = new Tone.DuoSynth({
+export const synth = new Tone.DuoSynth({
     vibratoAmount: 0.5,
     vibratoRate: 5,
     portamento: 0.1,

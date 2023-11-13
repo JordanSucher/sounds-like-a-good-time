@@ -79,7 +79,7 @@ const SingleRide = () => {
         let frameNums = data ? data.map(frame => {
             let match = pattern.exec(frame)
             if (!match) {
-                return 0
+                return 1
             }
             return match[1]
         }) : [1]
