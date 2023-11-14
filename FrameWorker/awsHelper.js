@@ -67,25 +67,41 @@ export const getReadStream =  (key) => {
     return s3stream
 }
 
-export const uploadFromStream = async (activityId, tile, sourceStream) => {
-    let pass = new PassThrough()
-    sourceStream.pipe(pass)
-    
-    await s3.upload({
-        Bucket: bucketName,
-        Key: `${activityId}/tiles/x${tile.x}-y${tile.y}.webp`,
-        Body: pass,
-        ContentType: 'image/webp',
-    }, (err, data) => {
-        if (err) {
-            console.log(err)
-        } else {
-        }
-    }).promise()
+const maxRetries = 3;  // Maximum number of retries
+const backoffMultiplier = 2; // Backoff multiplier (e.g., wait 2, 4, 8 seconds)
 
-    // clean up
+const uploadWithRetry = async (activityId, tile, pass, attempt = 0) => {
+    try {
+        // Your upload logic here
+        await s3.upload({
+            Bucket: bucketName,
+            Key: `${activityId}/tiles/x${tile.x}-y${tile.y}.webp`,
+            Body: pass,
+            ContentType: 'image/webp',
+        }).promise();
+    } catch (err) {
+        if (attempt < maxRetries) {
+            const delay = Math.pow(backoffMultiplier, attempt) * 1000; // Calculate delay
+            console.log(`Upload failed, retrying in ${delay/1000} seconds...`);
+            await new Promise(resolve => setTimeout(resolve, delay)); // Wait for the delay
+            return uploadWithRetry(attempt + 1); // Recursive call to retry
+        } else {
+            throw err; // If max retries reached, throw the error
+        }
+    }
+};
+
+
+export const uploadFromStream = async (activityId, tile, sourceStream) => {
+    let pass = new PassThrough();
+    sourceStream.pipe(pass);
+
+    // Call the retry function
+    await uploadWithRetry(activityId, tile, pass);
+
+    // Clean up
     pass.destroy();
-}
+};
 
 
 export const uploadFromBuffer = async (activityId, index, buffer) => {

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as Tone from 'tone';
 import {move, triggerAttack, computeLuminance} from './synthHelper.js';
 
-const DraggableCircle = ({startPosition}) => {
+const DraggableCircle = ({speed, startPosition}) => {
     const circleRef = useRef(null);
     let [currColor, setCurrColor] = useState("0,0,0");
     const currColorRef = useRef(currColor);
@@ -44,6 +44,7 @@ const DraggableCircle = ({startPosition}) => {
       let isMonitoring = false;
 
       const startMonitoring = (circle) => {
+        console.log("speed: ", speed)
           isMonitoring = true;
           
           const monitorInterval = setInterval(() => {
@@ -70,7 +71,7 @@ const DraggableCircle = ({startPosition}) => {
                   console.log(error);
               });
       
-          }, 500);  // Checks every 500ms
+          }, speed);  // Checks every 500ms
       }
       
       const stopMonitoring = () => {
@@ -192,7 +193,7 @@ const DraggableCircle = ({startPosition}) => {
         };
 
 
-    }, []);
+    }, [speed]);
 
     return <div ref={circleRef} className="draggable-circle" style={{
         backgroundColor: `rgba(${currColor})`, 

@@ -1,10 +1,10 @@
-const AWS = require('aws-sdk');
-const redis = require('redis');
-const axios = require('axios');
-const dotenv = require('dotenv');
+import AWS from 'aws-sdk'
+import redis from 'redis'
+import axios from 'axios'
+import dotenv from 'dotenv'
 dotenv.config();
-import { createFrames } from './Server/frameHelper.js'
-import { getLatLongsFromS3 } from './Server/awsHelper.js'
+import { createFrames } from './frameHelper.js'
+import { getLatLongsFromS3 } from './awsHelper.js'
 
 
 
