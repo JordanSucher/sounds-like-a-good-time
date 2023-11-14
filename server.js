@@ -123,6 +123,10 @@ app.post('/api/customactivities', async (req, res) => {
     await saveLatLongsToS3(`custom/${name}`, latlongsjson)
     progressLog[`custom/${name}`] = [`created custom activity ${name}`]
     res.send("Ok, saved " + name)
+    await axios.post('/api/video', {
+        activityId: `custom/${name}`,
+        latlongs: latlongs
+    })
 })
 
 

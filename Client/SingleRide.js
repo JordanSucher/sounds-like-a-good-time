@@ -66,7 +66,7 @@ const SingleRide = () => {
             console.log("data: ", data)
             setVideoInS3 (data.status)
             // if no progress, restart generation
-            if (data.status == 'activityInS3' && data.progress == 0) {
+            if (data.status == 'activityInS3' && data.progress == 1) {
                 generateVideo();
             }
 
