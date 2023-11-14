@@ -33,6 +33,11 @@ const redisClient = redis.createClient({
 // Function to process video
 const generateVidFromS3 = (activityId) => {
     let url = `https://ridevisualizer.s3.us-east-2.amazonaws.com/${activityId}/frames/frame%d.webp`
+    let temp = activityId
+    // if it is custom, make a temp name
+    if (activityId.split('/') && activityId.split('/')[0] === 'custom') {
+       temp = activityId.split('/')[1]
+    }
 
     ffmpeg()
         .input(url) 
@@ -77,7 +82,7 @@ const generateVidFromS3 = (activityId) => {
         .videoCodec('libx264')
         .addOption('-crf', '34', '-preset', 'ultrafast', '-loglevel', 'debug')
         .format('mp4')
-        .output(`${activityId}.mp4`)
+        .output(`${temp}.mp4`)
         .on('error', async function(err) {
             await sendProgress(activityId, `Error generating video`)
             console.error('Error:', err);
@@ -89,10 +94,10 @@ const generateVidFromS3 = (activityId) => {
         .on('end', async function() {
             await sendProgress(activityId, `Video created successfully`)
             console.log('Video created successfully');
-            await uploadVideoFromFile(activityId)
+            await uploadVideoFromFile(temp)
             await sendProgress(activityId, `everything done`)
 
-            fs.unlink(`${activityId}.mp4`, (err) => {
+            fs.unlink(`${temp}.mp4`, (err) => {
                 if (err) {
                     console.error('Error deleting file:', err);
                 } else {

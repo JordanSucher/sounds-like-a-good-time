@@ -145,8 +145,8 @@ app.post('/api/progress', (req, res) => {
 })
 
 
-const enqueueVideoGenerationTask = async (activityId) => {
-    const queueName = 'video-queue'; // The same queue your worker listens on
+const enqueueFrameGenerationTask = async (activityId) => {
+    const queueName = 'frame-queue'; // The same queue your worker listens on
     const task = { activityId };
     try {
         await redisClient.rPush(queueName, JSON.stringify(task));
@@ -171,11 +171,8 @@ app.post('/api/video', async (req, res) => {
         latlongs = await getLatLongsFromS3(activityId);
     }
 
-    // generate frames
-    await createFrames(latlongs, activityId);
-
-    // generate video
-    await enqueueVideoGenerationTask(activityId);
+    // generate frame generation task
+    await enqueueFrameGenerationTask(activityId);
 
 })
 
