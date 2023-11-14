@@ -22,7 +22,7 @@ function RideViewer({speed}) {
   })
 
   useEffect(() => {
-    document.querySelector(".RideFooter").style.display = "block";
+    document.querySelector(".RideFooter").style.display = "flex";
   }, [])
 
     return (
