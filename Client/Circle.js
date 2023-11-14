@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as Tone from 'tone';
 import {move, triggerAttack, computeLuminance} from './synthHelper.js';
+import { useSearchParams } from 'react-router-dom';
 
 const DraggableCircle = ({speed, startPosition}) => {
     const circleRef = useRef(null);
