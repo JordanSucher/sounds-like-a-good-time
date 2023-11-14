@@ -17,7 +17,7 @@ const RideFooter = ({setSpeed, speed}) => {
     }
 
     return (
-        <div className="RideFooter">
+        <div className="RideFooter" style={{display: "none"}}>
             Settings
             <select onChange={(e) => handleKeyChange(e)}>
                 <option value="C2">C</option>

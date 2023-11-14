@@ -21,6 +21,10 @@ function RideViewer({speed}) {
     };
   })
 
+  useEffect(() => {
+    document.querySelector(".RideFooter").style.display = "block";
+  }, [])
+
     return (
       <>
       <div className="mobile-warning" style={{display: "none"}}>
