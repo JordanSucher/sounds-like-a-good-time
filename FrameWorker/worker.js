@@ -32,9 +32,9 @@ const redisClient = redis.createClient({
     console.log('Redis client connected');
 })();
 
-const enqueueVideoGenerationTask = async (activityId) => {
+const enqueueVideoGenerationTask = async (activityId, size) => {
     const queueName = 'video-queue'; // The same queue your worker listens on
-    const task = { activityId };
+    const task = { activityId, size };
     try {
         await redisClient.rPush(queueName, JSON.stringify(task));
     }
@@ -52,13 +52,14 @@ const pollQueue = async () => {
         if (message) {
             console.log("Received message:", message);
             let activityId = JSON.parse(message).activityId
+            let size = JSON.parse(message).size
 
             let latlongs = await getLatLongsFromS3(activityId);
     
-            await createFrames(latlongs, activityId);
+            await createFrames(latlongs, activityId, size);
 
             // after frames created, initiate video generation
-            await enqueueVideoGenerationTask(activityId);
+            await enqueueVideoGenerationTask(activityId, size);
     
         }
     } catch (error) {

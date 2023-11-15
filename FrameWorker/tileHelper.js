@@ -7,12 +7,22 @@ import { sendProgress } from "./worker.js";
 
 // Tile Setup
 export const z = 19;
-const tileSize = 256;
+let tileSize = 256;
+
 
 const EARTH_CIRCUMFERENCE = 40075017; // Earth's circumference in meters
 
 export const xSize = 360 / Math.pow(2, z);
 export let ySize
+
+
+export const setTileSize = (size) => {
+  if (size == "large") {
+    tileSize = 512;
+  } else {
+    tileSize = 256;
+  }
+}
 
 export function setYSize(latLongs) {
   let centerLat =
@@ -57,13 +67,14 @@ export function tile2lat(y, z) {
   return lat;
 }
 
-export const downloadTileFromMapboxToS3 = async (tile, activityId) => {
+export const downloadTileFromMapboxToS3 = async (tile, activityId, size) => {
  
     let x = tile.x;
     let y = tile.y;
 
-    let tileUrl = `https://api.mapbox.com/v4/mapbox.satellite/${z}/${x}/${y}.webp?access_token=${process.env.MAPBOX_API_KEY}`
-
+    let tileUrl = (size == "small") ? 
+    `https://api.mapbox.com/v4/mapbox.satellite/${z}/${x}/${y}.webp?access_token=${process.env.MAPBOX_API_KEY}`
+  : `https://api.mapbox.com/v4/mapbox.satellite/${z}/${x}/${y}@2x.webp?access_token=${process.env.MAPBOX_API_KEY}`
     try {
         const res = await axios({
             method: 'get',

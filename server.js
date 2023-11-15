@@ -120,12 +120,14 @@ app.post('/api/customactivities', async (req, res) => {
     let name = req.body.name;
     let latlongs = req.body.latlongs;
     let latlongsjson = JSON.parse(latlongs)
+    let size = req.body.size;
     await saveLatLongsToS3(`custom/${name}`, latlongsjson)
     progressLog[`custom/${name}`] = [`created custom activity ${name}`]
     res.send("Ok, saved " + name)
     await axios.post('/api/video', {
         activityId: `custom/${name}`,
-        latlongs: latlongs
+        latlongs: latlongs,
+        size: size
     })
 })
 
@@ -145,9 +147,9 @@ app.post('/api/progress', (req, res) => {
 })
 
 
-const enqueueFrameGenerationTask = async (activityId) => {
+const enqueueFrameGenerationTask = async (activityId, size) => {
     const queueName = 'frame-queue'; // The same queue your worker listens on
-    const task = { activityId };
+    const task = { activityId, size };
     try {
         await redisClient.rPush(queueName, JSON.stringify(task));
     }
@@ -159,6 +161,8 @@ const enqueueFrameGenerationTask = async (activityId) => {
 app.post('/api/video', async (req, res) => {
     let activityId = req.body.activityId;
     let latlongs = req.body.latlongs;
+    let size = req.body.size;
+    if (!size) size = "small"
     res.send("Ok, generating video for activity " + activityId)
 
     progressLog[activityId] = []
@@ -172,7 +176,7 @@ app.post('/api/video', async (req, res) => {
     }
 
     // generate frame generation task
-    await enqueueFrameGenerationTask(activityId);
+    await enqueueFrameGenerationTask(activityId, size);
 
 })
 

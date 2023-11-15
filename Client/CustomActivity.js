@@ -19,9 +19,10 @@ const CustomActivity = () => {
         e.preventDefault();
         let name = e.target[0].value
         let latlongsfile = e.target[1].files[0]
+        let size = e.target[2].value
         if (latlongsfile) {
             let latlongs = await latlongsfile.text()
-            let { data } = await axios.post('/api/customactivities', { name, latlongs })
+            let { data } = await axios.post('/api/customactivities', { name, latlongs, size })
             // clear name
             e.target.reset()
             // refresh activities
@@ -42,6 +43,13 @@ const CustomActivity = () => {
                 <label>
                     Latlongs:
                     <input type="file" name="latlongs" />
+                </label>
+                <label>
+                    Size:
+                    <select>
+                        <option value="small">Small Tiles</option>
+                        <option value="large">Large Tiles</option>
+                    </select>
                 </label>
                 <input className="submit" type="submit" value="Submit" />
             </form>

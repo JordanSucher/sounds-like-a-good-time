@@ -8,8 +8,7 @@ const Navbar = () => {
     return (
         <div className="navbar">
             <p><a href="/">sounds like a good time (a bike ride visual synthesizer)</a></p>
-             <a href="/visualize?big=true">big example</a>
-             <a href="/visualize">small example</a>
+             <a href="/visualize">example</a>
         </div>
     )
 }

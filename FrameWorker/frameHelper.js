@@ -17,6 +17,7 @@ import {
 import {
   z,
   setYSize,
+  setTileSize,
   latLngToTile,
   tile2long,
   tile2lat,
@@ -25,8 +26,20 @@ import {
 } from "./tileHelper.js";
 import { sendProgress } from "./worker.js";
 
-const frameWidth = 256;
-const frameHeight = 256;
+let frameWidth = 256;
+let frameHeight = 256;
+
+export const setFrameSize = (size) => {
+  if (size == "large") {
+    frameWidth = 512;
+    frameHeight = 512;
+  } else {
+    frameWidth = 256;
+    frameHeight = 256;
+  }
+}
+
+
 const MAX_RETRIES = 3; // Maximum number of retries
 
 async function fetchWithRetry(url, retries = 0) {
@@ -88,7 +101,12 @@ async function generateFrame(canvasInput, coord, frameIndex, activityId, totalFr
   }
 }
 
-export const createFrames = async (latLongs, activityId, zoom = z) => {
+export const createFrames = async (latLongs, activityId, size, zoom = z) => {
+
+  // step 0: set frame size, tile size,
+  setFrameSize(size);
+  setTileSize(size);
+
   // step 0 : get file directory
   let tileDirectory = await getFileDirectory(`${activityId}/tiles`);
   let frameDirectory = await getFileDirectory(`${activityId}/frames`);
@@ -133,7 +151,7 @@ export const createFrames = async (latLongs, activityId, zoom = z) => {
 
         // step 3,ensure that tiles are in S3
 
-        await addTilesToS3(activityId, tileSet, tileDirectory);
+        await addTilesToS3(activityId, tileSet, tileDirectory, size);
 
         console.log(`done adding tiles for frame ${globalIndex} to S3`);
 

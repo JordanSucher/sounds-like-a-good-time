@@ -122,14 +122,14 @@ export const uploadFromBuffer = async (activityId, index, buffer) => {
 
 }
 
-export const addTilesToS3 = async (activityId, tiles, fileDirectory) => {
+export const addTilesToS3 = async (activityId, tiles, fileDirectory, size) => {
 
     let promises = tiles.map(async tile => {
         let prefix = `${activityId}/tiles/x${tile.x}-y${tile.y}.webp`
         if (fileDirectory.has(prefix)) {
             return
         } else {
-            await downloadTileFromMapboxToS3(tile, activityId)
+            await downloadTileFromMapboxToS3(tile, activityId, size)
         }   
     })
     

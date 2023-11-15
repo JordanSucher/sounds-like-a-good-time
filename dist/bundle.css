@@ -50,7 +50,7 @@ body, .App{
 /* NAVBAR */
 
 .navbar {
-    min-height: 50px;
+    min-height: 30px;
     padding: 15px;
     display: flex;
     flex-direction: column;
@@ -339,4 +339,13 @@ button:disabled{
 
 .RideFooter * {
     margin: 5px;
+}
+
+.RideFooter option, .RideFooter input{
+    font-family: monospace, sans-serif;
+    /* padding: 5px; */
+}
+
+input:focus, select:focus{
+    outline: none;
 }
