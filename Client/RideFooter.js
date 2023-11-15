@@ -79,10 +79,13 @@ const RideFooter = ({setSpeed, speed}) => {
                 <option value="banjo">Banjo</option>
                 <option value="clarinet">Clarinet</option>
                 <option value="cello">Cello</option>
+                <option value="contrabassoon">Contrabassoon</option>
+                <option value="saxophone">Saxophone</option>
+                <option value="flute">Flute</option>
             </select>
-            <input type="range" value={speed} min="200" max="1000" step="1" onChange={(e) => {
-                setSpeed(e.target.value)
-                setTempo(e.target.value)
+            <input type="range" value={speed} min="100" max="1000" step="1" onChange={(e) => {
+                setSpeed(1100 - e.target.value)
+                setTempo(1100 - e.target.value)
                 setSearchParams({
                     key: key,
                     mode: mode,
