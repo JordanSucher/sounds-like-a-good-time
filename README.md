@@ -1,7 +1,1 @@
-General Plan
-
-Obtain lat / longs from a strava activity
-Interpolate them to create an even spread
-Generate images from google maps API
-Stitch images together into video, somehow
-Figure out how to host project
+This repo grabs lat long data from strava, then uses that to get map tiles from mapbox, stitches them into a video with sharp and ffmpeg, then uses toneJS to create a generative soundtrack based on pixel data from the video.
