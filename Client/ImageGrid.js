@@ -5,7 +5,7 @@ const ImageGrid = ({id}) => {
     let searchParams = new URLSearchParams(window.location.search);
     let big = searchParams.get("big");
     let custom = searchParams.get("custom");
-    let customId = custom ? `custom/${id}` : id
+    let customId = custom=='true' ? `custom/${id}` : id
     
     let url
     if (id && id.length > 0) {
