@@ -20,6 +20,7 @@ const CustomActivity = () => {
         let name = e.target[0].value
         let latlongsfile = e.target[1].files[0]
         let size = e.target[2].value
+        console.log('size: ', size)
         if (latlongsfile) {
             let latlongs = await latlongsfile.text()
             let { data } = await axios.post('/api/customactivities', { name, latlongs, size })

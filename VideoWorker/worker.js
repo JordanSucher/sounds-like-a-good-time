@@ -96,7 +96,7 @@ const generateVidFromS3 = (activityId, size) => {
             .on('end', async function() {
                 await sendProgress(activityId, `Video created successfully`)
                 console.log('Video created successfully');
-                await uploadVideoFromFile(temp)
+                await uploadVideoFromFile(activityId)
                 await sendProgress(activityId, `everything done`)
     
                 fs.unlink(`${temp}.mp4`, (err) => {
@@ -171,6 +171,7 @@ const uploadVideoFromFile = async (activityId) => {
        temp = activityId.split('/')[1]
     }
 
+    console.log(`uploading video for ${activityId}`)
     let path = `${temp}.mp4`
     let stream = fs.createReadStream(path)
 
