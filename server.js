@@ -165,7 +165,8 @@ app.post('/api/video', async (req, res) => {
     let activityId = req.body.activityId;
     let latlongs = req.body.latlongs;
     let size = req.body.size;
-    if (!size) size = "small"
+    let videosize = size
+    if (size !== "large") videosize = "small"
     res.send("Ok, generating video for activity " + activityId)
 
     progressLog[activityId] = []
@@ -179,7 +180,7 @@ app.post('/api/video', async (req, res) => {
     }
 
     // generate frame generation task
-    await enqueueFrameGenerationTask(activityId, size);
+    await enqueueFrameGenerationTask(activityId, videosize);
 
 })
 

@@ -126,6 +126,16 @@ const SynthFooter = ({circle1, circle2, numCircles, setNumCircles}) => {
                     <option value="2">2</option>
                 </select>
             </label>
+            <label>Zoom:
+                <select onChange={(e) => {
+                    document.querySelector("video").style.minHeight=e.target.value
+                    document.querySelector("video").style.minWidth=e.target.value
+                    }}>
+                    <option value="100%">100%</option>
+                    <option value="200%">200%</option>
+                    <option value="300%">300%</option>
+                </select>
+            </label>
         <SynthSettings
             tonic={key}
             mode={mode}

@@ -4,10 +4,12 @@ import React from 'react';
 const ImageGrid = ({id}) => {
     let searchParams = new URLSearchParams(window.location.search);
     let big = searchParams.get("big");
+    let custom = searchParams.get("custom");
+    let customId = custom ? `custom/${id}` : id
     
     let url
     if (id && id.length > 0) {
-        url = `https://ridevisualizer.s3.us-east-2.amazonaws.com/${id}/video.mp4`
+        url = `https://ridevisualizer.s3.us-east-2.amazonaws.com/${customId}/video.mp4`
     } else if (big) {
         url = "https://ridevisualizer.s3.us-east-2.amazonaws.com/mapboxLargeComposite.mp4"
     } else {
