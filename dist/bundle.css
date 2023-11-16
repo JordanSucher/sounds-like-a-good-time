@@ -73,6 +73,16 @@ body, .App{
     color: blue;
 }
 
+/* CIRCLES */
+
+.dc1{
+    border: 20px solid black;
+}
+
+.dc2{
+    border: 20px solid darkblue;
+}
+
 .draggable-circle {
     position: absolute !important;
     /* border: 20px solid black; */
@@ -331,14 +341,15 @@ button:disabled{
     width: 100%;
     height: fit-content;
     background-color: #f9f8f5;
-    padding: 3px;
+    padding: 5px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     border-top: 3px solid black;
 }
 
-.RideFooter * {
+.SingleSynthSetting * {
     margin: 5px;
 }
 
@@ -349,4 +360,16 @@ button:disabled{
 
 input:focus, select:focus{
     outline: none;
+}
+
+.SingleSynthSetting{
+    font-weight: bold;
+}
+
+.ss1{
+    color: black;
+}
+
+.ss2{
+    color: blue
 }

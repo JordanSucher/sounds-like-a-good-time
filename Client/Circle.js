@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import * as Tone from 'tone';
-import {move, triggerAttack, computeLuminance} from './synthHelper.js';
-import { useSearchParams } from 'react-router-dom';
+import {computeLuminance} from './synthHelper.js';
+import SynthComponent from './SynthComponent.js';
 
-const DraggableCircle = ({speed, startPosition}) => {
+const DraggableCircle = ({startPosition, circleProp, index}) => {
     const circleRef = useRef(null);
     let [currColor, setCurrColor] = useState("0,0,0");
     const currColorRef = useRef(currColor);
     let [currPosition, setCurrPosition] = useState({ x: startPosition.x, y: startPosition.y });
     const currPositionRef = useRef(currPosition);
-    const [isPlaying, setIsPlaying] = useState(false);
     const isDragging = useRef(false);
+    const [luminance, setLuminance] = useState(0);
+    const [synthX, setSynthX] = useState(0);
+    const [synthY, setSynthY] = useState(0);
 
     const captureColorAtCirclePosition = async (circleElement) => {
         const circleBounds = circleElement.getBoundingClientRect();
@@ -45,7 +46,7 @@ const DraggableCircle = ({speed, startPosition}) => {
       let isMonitoring = false;
 
       const startMonitoring = (circle) => {
-        console.log("speed: ", speed)
+        console.log("speed: ", circleProp.speed)
           isMonitoring = true;
           
           const monitorInterval = setInterval(() => {
@@ -61,18 +62,21 @@ const DraggableCircle = ({speed, startPosition}) => {
               captureColorAtCirclePosition(circle).then((color) => {
                   setCurrColor(color);
                 //   console.log("color: ", color);
-                  let luminance = computeLuminance(color)
-                  move({
-                    l: luminance, 
-                    y: y / document.querySelector('body').getBoundingClientRect().height,
-                    x: x / document.querySelector('body').getBoundingClientRect().width
-                });
+                //   let luminance = computeLuminance(color)
+                //   move({
+                //     l: luminance, 
+                //     y: y / document.querySelector('body').getBoundingClientRect().height,
+                //     x: x / document.querySelector('body').getBoundingClientRect().width
+                // });
+                setLuminance(computeLuminance(color));
+                setSynthX(x / document.querySelector('body').getBoundingClientRect().width);
+                setSynthY(y / document.querySelector('body').getBoundingClientRect().height);
 
               }).catch((error) => {
                   console.log(error);
               });
       
-          }, speed);  // Checks every 500ms
+          }, circleProp.speed);  // Checks every 500ms
       }
       
       const stopMonitoring = () => {
@@ -90,7 +94,6 @@ const DraggableCircle = ({speed, startPosition}) => {
     useEffect(() => {
         const circle = circleRef.current;
         let offsetX, offsetY = false;
-        let tempX, tempY;
 
         if (!isMonitoring) {
             startMonitoring(circle);
@@ -101,12 +104,7 @@ const DraggableCircle = ({speed, startPosition}) => {
             e.preventDefault();
             isDragging.current = true;
 
-            if (!isPlaying) {
-                Tone.start();
-                setIsPlaying(true);
-            }
-
-            const circleBounds = document.querySelector('.draggable-circle').getBoundingClientRect();
+            const circleBounds = document.querySelector(`.dc${index}`).getBoundingClientRect();
             
             // Use `e.touches[0]` for touch events and `e` for mouse events
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -116,11 +114,11 @@ const DraggableCircle = ({speed, startPosition}) => {
             const y2 = circleBounds.top + circleBounds.height / 2;
 
             // trigger synth note
-            triggerAttack({ 
-                l: computeLuminance(currColorRef.current), 
-                y: y2 / document.querySelector('body').getBoundingClientRect().height,
-                x: x2 / document.querySelector('body').getBoundingClientRect().width
-            });
+            // triggerAttack({ 
+            //     l: computeLuminance(currColorRef.current), 
+            //     y: y2 / document.querySelector('body').getBoundingClientRect().height,
+            //     x: x2 / document.querySelector('body').getBoundingClientRect().width
+            // });
 
             // console.log("curr x and y ", circleBounds.left, circleBounds.top);
 
@@ -164,12 +162,9 @@ const DraggableCircle = ({speed, startPosition}) => {
             let xPercent = circleX / parentX;
             let yPercent = circleY / parentY;
 
-            move({ 
-                l: computeLuminance(currColorRef.current), 
-                y: yPercent,
-                x: xPercent
-            });
-           
+            setLuminance(computeLuminance(currColorRef.current));
+            setSynthX(xPercent);
+            setSynthY(yPercent); 
         };
 
         const onMouseUp = (e) => {
@@ -194,15 +189,23 @@ const DraggableCircle = ({speed, startPosition}) => {
         };
 
 
-    }, [speed]);
+    }, [circleProp.speed]);
 
-    return <div ref={circleRef} className="draggable-circle" style={{
-        backgroundColor: `rgba(${currColor})`, 
-        border: `20px solid black`,
-        color: currColor, 
-        left: currPosition.x+"px", 
-        top: currPosition.y+"px"}}>
-    </div>;
-};
+    return (
+    <>
+        <div ref={circleRef} className={`draggable-circle dc${index}`} style={{
+            backgroundColor: `rgba(${currColor})`, 
+            color: currColor, 
+            left: currPosition.x+"px", 
+            top: currPosition.y+"px"}}>
+        </div>
+        <SynthComponent 
+            l={luminance} 
+            y={synthY} 
+            x={synthX} 
+            circleProp = {circleProp}
+       />
+    </>
+)};
 
 export default DraggableCircle;

@@ -1,6 +1,6 @@
 import * as Tone from 'tone';
 
-export const synth = new Tone.DuoSynth({
+export const synthSettings = {
     vibratoAmount: 0.5,
     vibratoRate: 5,
     portamento: 0.1,
@@ -54,70 +54,70 @@ export const synth = new Tone.DuoSynth({
             octaves: -1.5
         }
     }
-}).toDestination();
+}
 
-export const cello = new Tone.Sampler({
-    urls: {
-        "A2":"A2.mp3",
-        "A3":"A3.mp3",
-        "A4":"A4.mp3",
-        "A5":"A5.mp3",
-        "A#2":"As2.mp3",
-        "A#3":"As3.mp3",
-        "A#4":"As4.mp3",
-        "A#5":"As5.mp3",
-        "B2":"B2.mp3",
-        "B4":"B4.mp3",
-        "B5":"B5.mp3",
-        "C2":"C2.mp3",
-        "C3":"C3.mp3",
-        "C4":"C4.mp3",
-        "C5":"C5.mp3",
-        "C6":"C6.mp3",
-        "C#2":"Cs2.mp3",
-        "C#3":"Cs3.mp3",
-        "C#4":"Cs4.mp3",
-        "C#5":"Cs5.mp3",
-        "D2":"D2.mp3",
-        "D3":"D3.mp3",
-        "D4":"D4.mp3",
-        "D5":"D5.mp3",
-        "D#2":"Ds2.mp3",
-        "D#3":"Ds3.mp3",
-        "D#4":"Ds4.mp3",
-        "D#5":"Ds5.mp3",
-        "E2":"E2.mp3",
-        "E3":"E3.mp3",
-        "E4":"E4.mp3",
-        "E5":"E5.mp3",
-        "F2":"F2.mp3",
-        "F3":"F3.mp3",
-        "F4":"F4.mp3",
-        "F5":"F5.mp3",
-        "F#2":"Fs2.mp3",
-        "F#3":"Fs3.mp3",
-        "F#4":"Fs4.mp3",
-        "F#5":"Fs5.mp3",
-        "G2":"G2.mp3",
-        "G3":"G3.mp3",
-        "G4":"G4.mp3",
-        "G5":"G5.mp3",
-        "G#2":"Gs2.mp3",
-        "G#3":"Gs3.mp3",
-        "G#4":"Gs4.mp3",
-        "G#5":"Gs5.mp3",
-    },
-    baseUrl: '/cello/',
-    attack: 0.5,
-    onload: () => {
-        console.log("loaded!");
-    },
-    onerror: (err) => {
-        console.log("error! ", err);
-    }
-}).toDestination();
+export const celloSettings = {
+        urls: {
+            "A2":"A2.mp3",
+            "A3":"A3.mp3",
+            "A4":"A4.mp3",
+            "A5":"A5.mp3",
+            "A#2":"As2.mp3",
+            "A#3":"As3.mp3",
+            "A#4":"As4.mp3",
+            "A#5":"As5.mp3",
+            "B2":"B2.mp3",
+            "B4":"B4.mp3",
+            "B5":"B5.mp3",
+            "C2":"C2.mp3",
+            "C3":"C3.mp3",
+            "C4":"C4.mp3",
+            "C5":"C5.mp3",
+            "C6":"C6.mp3",
+            "C#2":"Cs2.mp3",
+            "C#3":"Cs3.mp3",
+            "C#4":"Cs4.mp3",
+            "C#5":"Cs5.mp3",
+            "D2":"D2.mp3",
+            "D3":"D3.mp3",
+            "D4":"D4.mp3",
+            "D5":"D5.mp3",
+            "D#2":"Ds2.mp3",
+            "D#3":"Ds3.mp3",
+            "D#4":"Ds4.mp3",
+            "D#5":"Ds5.mp3",
+            "E2":"E2.mp3",
+            "E3":"E3.mp3",
+            "E4":"E4.mp3",
+            "E5":"E5.mp3",
+            "F2":"F2.mp3",
+            "F3":"F3.mp3",
+            "F4":"F4.mp3",
+            "F5":"F5.mp3",
+            "F#2":"Fs2.mp3",
+            "F#3":"Fs3.mp3",
+            "F#4":"Fs4.mp3",
+            "F#5":"Fs5.mp3",
+            "G2":"G2.mp3",
+            "G3":"G3.mp3",
+            "G4":"G4.mp3",
+            "G5":"G5.mp3",
+            "G#2":"Gs2.mp3",
+            "G#3":"Gs3.mp3",
+            "G#4":"Gs4.mp3",
+            "G#5":"Gs5.mp3",
+        },
+        baseUrl: '/cello/',
+        attack: 0.5,
+        onload: () => {
+            console.log("loaded!");
+        },
+        onerror: (err) => {
+            console.log("error! ", err);
+        }
+}
 
-export const saxophone = new Tone.Sampler({
+export const saxophoneSettings = {
     urls: {
         "A3":"A3.mp3",
         "A4":"A4.mp3",
@@ -167,9 +167,9 @@ export const saxophone = new Tone.Sampler({
     onerror: (err) => {
         console.log("error! ", err);
     }
-}).toDestination();
+}
 
-export const contrabassoon = new Tone.Sampler({
+export const contrabassoonSettings = {
     urls: {
         "A1":"A1.mp3",
         "A2":"A2.mp3",
@@ -219,9 +219,9 @@ export const contrabassoon = new Tone.Sampler({
     onerror: (err) => {
         console.log("error! ", err);
     }
-}).toDestination();
+}
 
-export const clarinet = new Tone.Sampler({
+export const clarinetSettings = {
     urls: {
         "A2":"A2.mp3",
         "A3":"A3.mp3",
@@ -277,9 +277,9 @@ export const clarinet = new Tone.Sampler({
     onerror: (err) => {
         console.log("error! ", err);
     }
-}).toDestination();
+}
 
-export const banjo = new Tone.Sampler({
+export const banjoSettings = {
     urls : {
         "A3" : "A3.mp3",
         "A4" : "A4.mp3",
@@ -328,9 +328,10 @@ export const banjo = new Tone.Sampler({
     onerror: (err) => {
         console.log("error! ", err);
     }
-}).toDestination();
+}
 
-export const flute = new Tone.Sampler({
+
+export const fluteSettings = {
     urls : {
         "A4":"A4.mp3",
     "A5":"A5.mp3",
@@ -383,7 +384,16 @@ export const flute = new Tone.Sampler({
     onerror: (err) => {
         console.log("error! ", err);
     }
-}).toDestination();
+}
+
+
+export const banjo = new Tone.Sampler(banjoSettings).toDestination();
+export const flute = new Tone.Sampler(fluteSettings).toDestination();
+export const clarinet = new Tone.Sampler(clarinetSettings).toDestination();
+export const synth = new Tone.DuoSynth(synthSettings).toDestination();
+export const contrabassoon = new Tone.Sampler(contrabassoonSettings).toDestination();
+export const saxophone = new Tone.Sampler(saxophoneSettings).toDestination();
+export const cello = new Tone.Sampler(celloSettings).toDestination();
 
 
 let instrument = synth
@@ -399,21 +409,26 @@ let instruments = {
 }
 
 export const setInstrument = (newInstrument) => {
-    console.log("new instrument", newInstrument)
-    if (instruments[newInstrument]) {
+    if (instruments[newInstrument] && instruments[newInstrument] !== instrument) {
         console.log("setting instrument", newInstrument)
+
+        instrument.triggerRelease()
+
         instrument = instruments[newInstrument]
-        synth.triggerRelease();
+        
+        // if new instrument is synth, trigger attack?
+        if (instrument == synth) instrument.triggerAttack('C2')
+
     }
 }
 
 
 
-let synthNotes = ["C2", "D2", "E2", "F2", "G2", "A2",
+export let synthNotes = ["C2", "D2", "E2", "F2", "G2", "A2",
 "C3", "D3", "E3", "F3", "G3", "A3", "B3",
 "C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"];
 
-function generateScale(rootNoteWithOctave, mode, numOctaves = 3) {
+export function generateScale(rootNoteWithOctave, mode, numOctaves = 3) {
     const notesSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     const modeIntervals = {
         ionian: [2, 2, 1, 2, 2, 2, 1], // Major scale
