@@ -136,7 +136,7 @@ return (
         <div>
             {(videoInS3 == 'notInS3') && <button onClick={()=>generateVideo()}>Generate Visualization</button> }
             {videoInS3 == 'activityInS3' && <button disabled>Visualization being generated. Come back in a bit.</button> }
-            {videoInS3 == 'videoInS3' && <Link to={`/visualize/${id}`}>Play Ride</Link>}
+            {videoInS3 == 'videoInS3' && <Link to={`/visualize/${activityIdRef.current}`}>Play Ride</Link>}
 
             {progress && progress.length > 0 &&
             <span>
