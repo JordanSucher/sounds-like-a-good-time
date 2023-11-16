@@ -52,10 +52,9 @@ const SingleRide = () => {
             setLatlongs(data.latlng.data)
         }
 
-        console.log("refresh token: ", refreshToken)
-        console.log("custom: ", custom)
 
-        if (refreshToken && !custom=='true') {
+        if (refreshToken && custom!=='true') {
+            console.log("getting latlongs")
             getLatLongs()
         }
 
