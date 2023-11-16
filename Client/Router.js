@@ -25,6 +25,9 @@ const RouteObj = () => {
 
         let [numCircles, setNumCircles] = useState(1);
 
+        let [volume, setVolume] = useState(0);
+        let [volume2, setVolume2] = useState(0);
+
 
         let circle1 = {
             speed: speed,
@@ -34,7 +37,9 @@ const RouteObj = () => {
             key: key,
             setKey: setKey,
             mode: mode,
-            setMode: setMode
+            setMode: setMode,
+            volume: volume,
+            setVolume: setVolume
         }
 
         let circle2 = {
@@ -45,7 +50,9 @@ const RouteObj = () => {
             key: key2,
             setKey: setKey2,
             mode: mode2,
-            setMode: setMode2
+            setMode: setMode2,
+            volume: volume2,
+            setVolume: setVolume2
         }
 
         return (

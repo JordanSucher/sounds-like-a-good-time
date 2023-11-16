@@ -18,6 +18,9 @@ const SynthFooter = ({circle1, circle2, numCircles, setNumCircles}) => {
     let [tempo, setTempo] = useState(circle1.speed);
     let [tempo2, setTempo2] = useState(circle2.speed);
 
+    let [volume, setVolume] = useState(circle1.volume);
+    let [volume2, setVolume2] = useState(circle2.volume);
+
     const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
@@ -56,6 +59,15 @@ const SynthFooter = ({circle1, circle2, numCircles, setNumCircles}) => {
             if (searchParams.get('instrument2')) {
                 setInstrument2(searchParams.get('instrument2'))
                 circle2.setInstrument(searchParams.get('instrument2'))
+            }
+            // set volume from url
+            if (searchParams.get('volume')) {
+                setVolume(searchParams.get('volume'))
+                circle1.setVolume(searchParams.get('volume'))
+            }
+            if (searchParams.get('volume2')) {
+                setVolume2(searchParams.get('volume2'))
+                circle2.setVolume(searchParams.get('volume2'))
             }
             // set num circles from url
             if (searchParams.get('circles')) {
@@ -111,9 +123,22 @@ const SynthFooter = ({circle1, circle2, numCircles, setNumCircles}) => {
             setTempo(ms)
             setSearchParams({...Object.fromEntries(searchParams.entries()), speed: ms})
         } else if (index == 2) {
+            let ms = 60000 / e.target.value 
             circle2.setSpeed(ms)
             setTempo2(ms)
             setSearchParams({...Object.fromEntries(searchParams.entries()), speed2: ms})
+        }
+    }
+
+    const handleVolumeChange = (e, index) => {
+        if (index == 1) {
+            circle1.setVolume(e.target.value)
+            setVolume(e.target.value)
+            setSearchParams({...Object.fromEntries(searchParams.entries()), volume: e.target.value})
+        } else if (index == 2) {
+            circle2.setVolume(e.target.value)
+            setVolume2(e.target.value)
+            setSearchParams({...Object.fromEntries(searchParams.entries()), volume2: e.target.value})
         }
     }
 
@@ -131,24 +156,23 @@ const SynthFooter = ({circle1, circle2, numCircles, setNumCircles}) => {
             </label>
             <label>
                 <span>Zoom</span> 
-                <select onChange={(e) => {
-                    document.querySelector("video").style.minHeight=e.target.value
-                    document.querySelector("video").style.minWidth=e.target.value
+                <input type="range" min="100" max="1000" onChange={(e) => {
+                    document.querySelector("video").style.minHeight=e.target.value+"%"
+                    document.querySelector("video").style.minWidth=e.target.value+"%"
                     }}>
-                    <option value="100%">100%</option>
-                    <option value="200%">200%</option>
-                    <option value="300%">300%</option>
-                </select>
+                </input>
             </label>
         <SynthSettings
             tonic={key}
             mode={mode}
             tempo={tempo}
             instrumentState={instrument}
+            volume={volume}
             setKey={handleKeyChange}
             setMode={handleModeChange}
             setTempo={handleTempoChange}
             setInstrument={handleInstrumentChange}    
+            setVolume={handleVolumeChange}
             index={1}
         />
         {numCircles == 2 &&
@@ -157,10 +181,12 @@ const SynthFooter = ({circle1, circle2, numCircles, setNumCircles}) => {
             mode={mode2}
             tempo={tempo2}
             instrumentState={instrument2}
+            volume={volume2}
             setKey={handleKeyChange}
             setMode={handleModeChange}
             setTempo={handleTempoChange}
             setInstrument={handleInstrumentChange}
+            setVolume={handleVolumeChange}
             index={2}
         />
         }

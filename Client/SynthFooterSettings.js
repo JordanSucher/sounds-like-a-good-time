@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
+import { Volume } from 'tone';
 
-const SynthSettings = ({tonic, mode, instrumentState,tempo, setKey, setMode, setTempo, setInstrument, index}) => {
+const SynthSettings = ({tonic, mode, instrumentState,tempo, volume, setKey, setMode, setTempo, setInstrument, index, setVolume}) => {
 
     return (
         <div className={`SingleSynthSetting ss${index}`}>
@@ -35,6 +36,8 @@ const SynthSettings = ({tonic, mode, instrumentState,tempo, setKey, setMode, set
             </select>
             <input type="number" value={(60/tempo)*1000} min="10" max="1000" step="1" onChange={(e) => setTempo(e, index)} />
             <span style={{fontWeight: "normal"}}>bpm</span>
+            <input type="range" value={volume} min='-10' max = '20' step = '.3' onChange={(e) => setVolume(e, index)} />
+            <span style={{fontWeight: "normal"}}>vol</span>
         </div>
     );
 }

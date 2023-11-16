@@ -40,6 +40,9 @@ import { banjoSettings, fluteSettings, contrabassoonSettings, clarinetSettings,
             })
         }, [])    
 
+    useEffect(() => {
+        if(circleProp.volume && instrument.volume) instrument.volume.value = circleProp.volume
+    }, [circleProp.volume, instrument])
 
 
     useEffect(() => {
