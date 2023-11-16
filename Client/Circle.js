@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {computeLuminance} from './synthHelper.js';
 import SynthComponent from './SynthComponent.js';
+import * as Tone from 'tone';
 
 const DraggableCircle = ({startPosition, circleProp, index}) => {
     const circleRef = useRef(null);
@@ -147,8 +148,8 @@ const DraggableCircle = ({startPosition, circleProp, index}) => {
             let y = clientY - offsetY - document.querySelector('.navbar').getBoundingClientRect().height;
 
             // console.log("new x and y", x, y);
-            x = Math.min(document.querySelector('video').videoWidth, x);
-            y = Math.min(document.querySelector('video').videoHeight, y);
+            x = Math.min(document.querySelector('.image-vid').getBoundingClientRect().width-document.querySelector('.draggable-circle').getBoundingClientRect().width, x);
+            y = Math.min(document.querySelector('.image-vid').getBoundingClientRect().height-document.querySelector('.draggable-circle').getBoundingClientRect().height, y);
 
             setCurrPosition({ x: Math.max(0,x), y: Math.max(0,y) });
 
