@@ -12,6 +12,7 @@ const DraggableCircle = ({startPosition, circleProp, index}) => {
     const [luminance, setLuminance] = useState(0);
     const [synthX, setSynthX] = useState(0);
     const [synthY, setSynthY] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const captureColorAtCirclePosition = async (circleElement) => {
         const circleBounds = circleElement.getBoundingClientRect();
@@ -113,12 +114,10 @@ const DraggableCircle = ({startPosition, circleProp, index}) => {
             const x2 = circleBounds.left + circleBounds.width / 2;
             const y2 = circleBounds.top + circleBounds.height / 2;
 
-            // trigger synth note
-            // triggerAttack({ 
-            //     l: computeLuminance(currColorRef.current), 
-            //     y: y2 / document.querySelector('body').getBoundingClientRect().height,
-            //     x: x2 / document.querySelector('body').getBoundingClientRect().width
-            // });
+            if(!isPlaying) {
+                Tone.start();
+                setIsPlaying(true);
+            }
 
             // console.log("curr x and y ", circleBounds.left, circleBounds.top);
 
