@@ -4,7 +4,7 @@ const SynthSettings = ({tonic, mode, instrumentState,tempo, setKey, setMode, set
 
     return (
         <div className={`SingleSynthSetting ss${index}`}>
-            Settings
+            <span>{">>>"}</span>
             <select value={tonic} onChange={(e) => setKey(e, index)}>
                 <option value="C2">C</option>
                 <option value="D2">D</option>
@@ -33,7 +33,8 @@ const SynthSettings = ({tonic, mode, instrumentState,tempo, setKey, setMode, set
                 <option value="saxophone">Saxophone</option>
                 <option value="flute">Flute</option>
             </select>
-            <input type="range" value={1100 - tempo} min="100" max="1000" step="1" onChange={(e) => setTempo(e, index)}/>
+            <input type="number" value={(60/tempo)*1000} min="10" max="1000" step="1" onChange={(e) => setTempo(e, index)} />
+            <span style={{fontWeight: "normal"}}>bpm</span>
         </div>
     );
 }

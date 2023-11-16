@@ -105,19 +105,22 @@ const SynthFooter = ({circle1, circle2, numCircles, setNumCircles}) => {
 
     const handleTempoChange = (e, index) => {
         if (index == 1) {
-            circle1.setSpeed(1100 - e.target.value)
-            setTempo(1100 - e.target.value)
-            setSearchParams({...Object.fromEntries(searchParams.entries()), speed: 1100 - e.target.value})
+            // e.target.value now in BPM, so
+            let ms = 60000 / e.target.value 
+            circle1.setSpeed(ms)
+            setTempo(ms)
+            setSearchParams({...Object.fromEntries(searchParams.entries()), speed: ms})
         } else if (index == 2) {
-            circle2.setSpeed(1100 - e.target.value)
-            setTempo2(1100 - e.target.value)
-            setSearchParams({...Object.fromEntries(searchParams.entries()), speed2: 1100 - e.target.value})
+            circle2.setSpeed(ms)
+            setTempo2(ms)
+            setSearchParams({...Object.fromEntries(searchParams.entries()), speed2: ms})
         }
     }
 
     return (
         <div className="RideFooter" style={{display: "none"}}>
-            <label>Number of Circles: 
+            <label>
+                <span>Circles</span> 
                 <select value={numCircles} onChange={(e) => {
                     setNumCircles(e.target.value)
                     setSearchParams({...Object.fromEntries(searchParams.entries()), circles: e.target.value})
@@ -126,7 +129,8 @@ const SynthFooter = ({circle1, circle2, numCircles, setNumCircles}) => {
                     <option value="2">2</option>
                 </select>
             </label>
-            <label>Zoom:
+            <label>
+                <span>Zoom</span> 
                 <select onChange={(e) => {
                     document.querySelector("video").style.minHeight=e.target.value
                     document.querySelector("video").style.minWidth=e.target.value
