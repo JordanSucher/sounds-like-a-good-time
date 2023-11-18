@@ -149,13 +149,15 @@ app.get('/api/progress', (req, res) => {
 app.post('/api/progress', (req, res) => {
     let activityId = req.body.activityId;
     let progress = req.body.progress;
+    if (!progressLog[activityId]) progressLog[activityId] = []
     progressLog[activityId].push(progress) // add progress
     res.send("Ok, updated progress for activity " + activityId)
 })
 
 
 const enqueueFrameGenerationTask = async (activityId, size) => {
-    const queueName = 'frame-queue'; // The same queue your worker listens on
+    let queueName = 'frame-queue';
+    if (activityId.split('/')[0] == 'custom') queueName = 'frame-queue-test'; // The same queue your worker listens on
     const task = { activityId, size };
     try {
         await redisClient.rPush(queueName, JSON.stringify(task));
