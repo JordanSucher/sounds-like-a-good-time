@@ -18,6 +18,7 @@ import {
   z,
   setYSize,
   setTileSize,
+  setZoom,
   latLngToTile,
   tile2long,
   tile2lat,
@@ -31,8 +32,8 @@ let frameHeight = 256;
 
 export const setFrameSize = (size) => {
   if (size == "large") {
-    frameWidth = 512;
-    frameHeight = 512;
+    frameWidth = 1024;
+    frameHeight = 1024;
   } else {
     frameWidth = 256;
     frameHeight = 256;
@@ -40,7 +41,7 @@ export const setFrameSize = (size) => {
 }
 
 
-const MAX_RETRIES = 3; // Maximum number of retries
+const MAX_RETRIES = 8; // Maximum number of retries
 
 async function fetchWithRetry(url, retries = 0) {
   try {
@@ -52,6 +53,7 @@ async function fetchWithRetry(url, retries = 0) {
       await new Promise(resolve => setTimeout(resolve, delay));
       return fetchWithRetry(url, retries + 1);
     } else {
+      console.log(`unable to fetch tile after 8 retries: ${url}`);
       throw error; // Rethrow error after max retries
     }
   }
@@ -67,8 +69,12 @@ async function generateFrame(canvasInput, coord, frameIndex, activityId, totalFr
 
 
   console.log(`Generating frame: ${frameIndex}`);
-  await sendProgress(activityId, `Generating frame ${frameIndex} of ${totalFrames}`);
-  console.log(`Left: ${left}, Top: ${top}`);
+  try {
+    await sendProgress(activityId, `Generating frame ${frameIndex} of ${totalFrames}`);
+  } catch (err) {
+    console.error(`Error sending progress:`, err);
+  }
+    console.log(`Left: ${left}, Top: ${top}`);
   
 
   try {
@@ -98,10 +104,12 @@ async function generateFrame(canvasInput, coord, frameIndex, activityId, totalFr
       });
   } catch (err) {
     console.error(`Error generating frame ${frameIndex}:`, err);
+    console.log("canvasInput: ", canvasInput);
+    console.log('frame width & height: ', frameWidth, frameHeight);
   }
 }
 
-export const createFrames = async (latLongs, activityId, size, zoom = z) => {
+export const createFrames = async (latLongs, activityId, size, zoom) => {
 
   // step 0: set frame size, tile size,
   setFrameSize(size);
@@ -112,9 +120,9 @@ export const createFrames = async (latLongs, activityId, size, zoom = z) => {
   let frameDirectory = await getFileDirectory(`${activityId}/frames`);
 
   // step 0.5: set ysize
-  setYSize(latLongs, zoom);
+  setYSize(latLongs, size);
 
-  // parallel processing w batch size of 20
+  // parallel processing w batch size of 10
   let batchSize = 20;
 
   for (let i = 0; i < latLongs.length; i += batchSize) {
@@ -153,13 +161,17 @@ export const createFrames = async (latLongs, activityId, size, zoom = z) => {
 
         await addTilesToS3(activityId, tileSet, tileDirectory, size);
 
-        console.log(`done adding tiles for frame ${globalIndex} to S3`);
+        console.log(`done adding tiles for frame ${globalIndex} to S3: `);
+        console.log("tileset:")
+        tileSet.forEach((tile) => {
+          console.log(tile);
+        })
 
         // step 4:assemble canvas input
 
         let promises = tileSet.map(async (tile) => {
           try {
-            let url = `https://ridevisualizer.s3.us-east-2.amazonaws.com/${activityId}/tiles/x${tile.x}-y${tile.y}.webp`;
+            let url = size == "large" ? `https://ridevisualizer.s3.us-east-2.amazonaws.com/${activityId}/tiles/x${tile.x}-y${tile.y}.jpeg` : `https://ridevisualizer.s3.us-east-2.amazonaws.com/${activityId}/tiles/x${tile.x}-y${tile.y}.webp`;
             let data = await fetchWithRetry(url);
 
             let buffer = Buffer.from(data);

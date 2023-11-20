@@ -70,14 +70,20 @@ export const getReadStream =  (key) => {
 const maxRetries = 3;  // Maximum number of retries
 const backoffMultiplier = 2; // Backoff multiplier (e.g., wait 2, 4, 8 seconds)
 
-const uploadWithRetry = async (activityId, tile, pass, attempt = 0) => {
+const uploadWithRetry = async (activityId, tile, pass, size, attempt = 0) => {
     try {
         // Your upload logic here
+        let key = `${activityId}/tiles/x${tile.x}-y${tile.y}.webp`
+        let type = 'image/webp'
+        if (size=='large') {
+            key = `${activityId}/tiles/x${tile.x}-y${tile.y}.jpeg`
+            type = 'image/jpeg'
+        }
         await s3.upload({
             Bucket: bucketName,
-            Key: `${activityId}/tiles/x${tile.x}-y${tile.y}.webp`,
+            Key: key,
             Body: pass,
-            ContentType: 'image/webp',
+            ContentType: type,
         }).promise();
     } catch (err) {
         if (attempt < maxRetries) {
@@ -92,12 +98,12 @@ const uploadWithRetry = async (activityId, tile, pass, attempt = 0) => {
 };
 
 
-export const uploadFromStream = async (activityId, tile, sourceStream) => {
+export const uploadFromStream = async (activityId, tile, sourceStream, size) => {
     let pass = new PassThrough();
     sourceStream.pipe(pass);
 
     // Call the retry function
-    await uploadWithRetry(activityId, tile, pass);
+    await uploadWithRetry(activityId, tile, pass, size);
 
     // Clean up
     pass.destroy();
@@ -126,6 +132,9 @@ export const addTilesToS3 = async (activityId, tiles, fileDirectory, size) => {
 
     let promises = tiles.map(async tile => {
         let prefix = `${activityId}/tiles/x${tile.x}-y${tile.y}.webp`
+        if (size == 'large') {
+            prefix = `${activityId}/tiles/x${tile.x}-y${tile.y}.jpeg`
+        }
         if (fileDirectory.has(prefix)) {
             return
         } else {

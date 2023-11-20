@@ -115,22 +115,18 @@ const generateVidFromS3 = (activityId, size) => {
         .input(url) 
         .inputFPS(20) // Set the frame rate
         .complexFilter([
-            { filter: 'split', options: { outputs: 8 }, outputs: ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8'] },
+            { filter: 'split', options: { outputs: 4 }, outputs: ['v1', 'v2', 'v3', 'v4'] },
             { filter: 'tpad', options: { start_duration: 0 }, inputs: 'v1', outputs: 'v1out' },
             { filter: 'tpad', options: { start_duration: 0.083 }, inputs: 'v2', outputs: 'v2out' },
             { filter: 'tpad', options: { start_duration: 0.166 }, inputs: 'v3', outputs: 'v3out' },
             { filter: 'tpad', options: { start_duration: 0.249 }, inputs: 'v4', outputs: 'v4out' },
-            { filter: 'tpad', options: { start_duration: 0.332 }, inputs: 'v5', outputs: 'v5out' },
-            { filter: 'tpad', options: { start_duration: 0.415 }, inputs: 'v6', outputs: 'v6out' },
-            { filter: 'tpad', options: { start_duration: 0.498 }, inputs: 'v7', outputs: 'v7out' },
-            { filter: 'tpad', options: { start_duration: 0.581 }, inputs: 'v8', outputs: 'v8out' },
-            { filter: 'hstack', options: { inputs: 4 }, inputs: ['v1out', 'v2out', 'v3out', 'v4out', ], outputs: 'top_row' },
-            { filter: 'hstack', options: { inputs: 4 }, inputs: ['v5out', 'v6out', 'v7out', 'v8out'], outputs: 'bottom_row' },
+            { filter: 'hstack', options: { inputs: 2 }, inputs: ['v1out', 'v2out' ], outputs: 'top_row' },
+            { filter: 'hstack', options: { inputs: 2 }, inputs: ['v3out', 'v4out'], outputs: 'bottom_row' },
             { filter: 'vstack', options: { inputs: 2 }, inputs: ['top_row', 'bottom_row'], outputs: 'grid' }
         ])
         .map('[grid]')
         .videoCodec('libx264')
-        .addOption('-crf', '34', '-preset', 'ultrafast', '-loglevel', 'debug')
+        .addOption('-crf', '34', '-preset', 'ultrafast', '-loglevel', 'verbose')
         .format('mp4')
         .output(`${temp}.mp4`)
         .on('error', async function(err) {

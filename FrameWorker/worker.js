@@ -5,6 +5,10 @@ import dotenv from 'dotenv'
 dotenv.config();
 import { createFrames } from './frameHelper.js'
 import { getLatLongsFromS3 } from './awsHelper.js'
+import { setZoom } from './tileHelper.js';
+import EventEmitter from 'events';
+
+EventEmitter.defaultMaxListeners = 100
 
 
 
@@ -53,10 +57,16 @@ const pollQueue = async () => {
             console.log("Received message:", message);
             let activityId = JSON.parse(message).activityId
             let size = JSON.parse(message).size
-
+            setZoom(size)
             let latlongs = await getLatLongsFromS3(activityId);
-    
-            await createFrames(latlongs, activityId, size);
+            let zoom
+            if (size == 'large') {
+                zoom = 17
+            } else {
+                zoom = 19
+            }
+
+            await createFrames(latlongs, activityId, size, zoom);
 
             // after frames created, initiate video generation
             await enqueueVideoGenerationTask(activityId, size);
@@ -80,10 +90,11 @@ const pollQueue = async () => {
 
 // Function to update your server on progress (possibly through HTTP requests or another Redis queue).
 export const sendProgress = async (activityId, progress) => {
-    let url = process.env.UPDATE_API_URL
-    
+    let url = 'https://ride-visualizer.onrender.com/api/progress'
+
+
     try {
-        await axios.post("https://ride-visualizer.onrender.com/api/progress", {
+        await axios.post(url, {
             activityId: activityId,
             progress: progress
         })
