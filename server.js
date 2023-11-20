@@ -121,21 +121,26 @@ app.post('/api/customactivities', async (req, res) => {
     let latlongs = req.body.latlongs;
     let latlongsjson = JSON.parse(latlongs)
     let size = req.body.size;
-    await saveLatLongsToS3(`custom/${name}`, latlongsjson)
-    progressLog[`custom/${name}`] = [`created custom activity ${name}`]
-    let url = 'http://soundslikeagoodti.me/api/video'
-    if (process.env.ENVIRONMENT == 'dev') url = 'http://localhost:8000/api/video'
-    try {
-        await axios.post(url, {
-            activityId: `custom/${name}`,
-            latlongs: latlongs,
-            size: size
-        })
-    } catch (error) {
-        console.log(error)
-    }
-    res.send("Ok, saved " + name)
 
+    // check if already in S3, if so return error
+    if (await checkIfInS3(`custom/${name}`)) {
+        res.status(400).send(`Activity ${name} already exists`)
+    } else {
+        await saveLatLongsToS3(`custom/${name}`, latlongsjson)
+        progressLog[`custom/${name}`] = [`created custom activity ${name}`]
+        let url = 'http://soundslikeagoodti.me/api/video'
+        if (process.env.ENVIRONMENT == 'dev') url = 'http://localhost:8000/api/video'
+        try {
+            await axios.post(url, {
+                activityId: `custom/${name}`,
+                latlongs: latlongs,
+                size: size
+            })
+        } catch (error) {
+            console.log(error)
+        }
+        res.send("Ok, saved " + name)
+    }
 })
 
 
@@ -157,7 +162,7 @@ app.post('/api/progress', (req, res) => {
 
 const enqueueFrameGenerationTask = async (activityId, size) => {
     let queueName = 'frame-queue';
-    if (activityId.split('/')[0] == 'custom') queueName = 'frame-queue-test'; // The same queue your worker listens on
+    // if (activityId.split('/')[0] == 'custom') queueName = 'frame-queue-test'; // The same queue your worker listens on
     const task = { activityId, size };
     try {
         await redisClient.rPush(queueName, JSON.stringify(task));

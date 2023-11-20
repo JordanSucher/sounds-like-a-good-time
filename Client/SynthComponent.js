@@ -89,6 +89,11 @@ import { banjoSettings, fluteSettings, contrabassoonSettings, clarinetSettings,
         if (keyState && modeState) setSynthNotes(generateScale(keyState, modeState))
     }, [keyState, modeState])
 
+    useEffect(() => {
+        return () => {
+            if (instrument) instrument.triggerRelease()
+        }
+    }, [instrument])
 
 
     return (<></>)

@@ -4,6 +4,7 @@ import LandingPage from './LandingPage.js';
 import SingleRide from "./SingleRide.js";
 import CustomActivity from "./CustomActivity.js";
 import SynthFooter from "./SynthFooter.js";
+import FromFile from "./FromFile.js";
 
 import {
     BrowserRouter as Router,
@@ -63,6 +64,7 @@ const RouteObj = () => {
                     <Route path="/visualize/:id" element={<RideViewer circle1={circle1} circle2={circle2} numCircles={numCircles} />} />
                     <Route path="/visualize" element={<RideViewer circle1={circle1} circle2={circle2} numCircles={numCircles} />} />
                     <Route path="/custom" element={<CustomActivity />} />
+                    <Route path="/fromfile" element={<FromFile />} />
                 </Routes>
                 <SynthFooter circle1={circle1} circle2={circle2} numCircles={numCircles} setNumCircles={setNumCircles}/>
             </Router>

@@ -4,10 +4,11 @@ import axios from 'axios';
 
 const CustomActivity = () => {
     let [activities, setActivities] = useState([]);
+    let [error, setError] = useState(null);
 
     let getActivities = async () => {
-        let { data } = await axios.get('/api/customactivities')
-        setActivities(data)
+        let data = localStorage.getItem('customActivities')
+        setActivities(JSON.parse(data))
         console.log("custom activities", data)
     }
 
@@ -22,8 +23,22 @@ const CustomActivity = () => {
         let size = e.target[2].value
         console.log('size: ', size)
         if (latlongsfile) {
+            // save to server
             let latlongs = await latlongsfile.text()
-            let { data } = await axios.post('/api/customactivities', { name, latlongs, size })
+            try {
+                await axios.post('/api/customactivities', { name, latlongs, size })
+                // save to local storage
+                let localActivities = JSON.parse(localStorage.getItem('customActivities')) || []
+                localActivities.push(name)
+                localStorage.setItem('customActivities', JSON.stringify(localActivities))
+                // refresh activities
+                setActivities(localActivities)
+            localActivities.push(name)
+            } catch (error) {
+                console.log("could not save activity")   
+                setError("Name is already in use") 
+            }
+
             // clear name
             e.target.reset()
             // refresh activities
@@ -41,6 +56,7 @@ const CustomActivity = () => {
                     Activity Name:
                     <input type="text" name="name" />
                 </label>
+                {error && <p style={{color: 'red', fontSize: '10px'}}>{error}</p>}
                 <label>
                     Latlongs:
                     <input type="file" name="latlongs" />
@@ -56,7 +72,7 @@ const CustomActivity = () => {
             </form>
 
             <ul>
-                {activities.map(activity => {
+                {activities && activities.map(activity => {
                     return (
                     <li key={activity}>
                         <Link to={`/ride/${activity}?custom=true`}>{activity}</Link>

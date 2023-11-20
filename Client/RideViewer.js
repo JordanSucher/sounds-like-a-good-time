@@ -3,7 +3,7 @@
 import React, {useEffect} from 'react';
 import ImageGrid from './ImageGrid.js';
 import DraggableCircle from './Circle.js';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useLocation } from 'react-router-dom';
 import * as Tone from 'tone';
 
 
@@ -11,11 +11,21 @@ import * as Tone from 'tone';
 
 function RideViewer({circle1, circle2, numCircles}) {
   const { id } = useParams();
+  const location = useLocation();
+
 
   useEffect(() => {
     // show the settings footer!
     document.querySelector(".RideFooter").style.display = "flex";
   }, [circle1, circle2])
+
+  useEffect(() => {
+
+    return () => {
+      document.querySelector(".RideFooter").style.display = "none";
+      localStorage.removeItem("videoUrl");
+    }
+  }, [])
 
     return (
       <>

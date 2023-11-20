@@ -100,7 +100,9 @@ const LandingPage = () => {
         // user has not logged in with Strava
         return (
             <div className="LandingPage">
-                <a className="LoginButton" href={`http://strava.com/oauth/authorize?client_id=${process.env.STRAVA_CLIENT_ID}&response_type=code&scope=read_all,activity:read_all&redirect_uri=${process.env.REDIRECT_URI}`}>Login with Strava</a>
+                <a className="Button" href={`http://strava.com/oauth/authorize?client_id=${process.env.STRAVA_CLIENT_ID}&response_type=code&scope=read_all,activity:read_all&redirect_uri=${process.env.REDIRECT_URI}`}>Login with Strava</a>
+                <a className="Button" href="/custom">Create from latlong data</a>
+                <a className="Button" href="/fromfile">Upload video file</a>
             </div>
         )
     }
@@ -111,6 +113,8 @@ const LandingPage = () => {
         return (
             <div className="LandingPage">
                 {activities && activities.length > 0 && <button onClick={()=>getAccessTokenAndActivities(true)}>Get Newer Rides</button> }
+                <a className="Button" href="/custom">Create from latlong data</a>
+                <a className="Button" href="/fromfile">Upload video file</a>
                 <ul>
                     {activities && activities.map((activity) => {
                         return (
