@@ -39,12 +39,7 @@ const FromFile = () => {
             </form>
             
             {videoUrl && 
-                <Link to={{
-                    pathname: '/visualize',
-                    state: {
-                        url: videoUrl
-                    }
-                }}>
+                <Link to={'/visualize?fromfile=true'}>
                     Play Video
                 </Link>
             }

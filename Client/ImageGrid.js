@@ -9,12 +9,13 @@ const ImageGrid = ({id}) => {
     let customId = custom=='true' ? `custom/${id}` : id
     let url
     let videourl = localStorage.getItem('videoUrl')
+    let isFromFile = searchParams.get("fromfile")
 
     if (id && id.length > 0) {
         url = `https://ridevisualizer.s3.us-east-2.amazonaws.com/${customId}/video.mp4`
     } else if (big) {
         url = "https://ridevisualizer.s3.us-east-2.amazonaws.com/mapboxLargeComposite.mp4"
-    } else if (videourl) {
+    } else if (videourl && isFromFile == 'true') {
         url = videourl
     }
 
